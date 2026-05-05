@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio — Your Name</title>
+  <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap)" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0d0f;
+      --surface:   #141417;
+      --card:      #1a1a1f;
+      --border:    #2a2a32;
+      --accent:    #6c63ff;
+      --accent2:   #a78bfa;
+      --text:      #e8e8f0;
+      --muted:     #7c7c94;
+      --radius:    12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(13,13,15,0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(108,99,255,0.15);
+      border: 1px solid rgba(108,99,255,0.3);
+      color: var(--accent2);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #5b54d6;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(108,99,255,0.35);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+      transform: translateY(-2px);
+    }
+
+    /* ── Sections ── */
+    section {
+      padding: 5rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      max-width: 500px;
+      font-size: 0.95rem;
+      margin-bottom: 3rem;
+    }
+
+    /* ── About ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .about-text p { color: var(--muted); margin-bottom: 1rem; line-height: 1.8; }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .stat-card .num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-card .label { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* ── Experience ── */
+    .exp-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .exp-item {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .exp-item:last-child {
+      border-bottom: none;
+    }
+
+    /* Logo */
+    .exp-img {
+      width: 90px;     /* control size */
+      height: auto;    /* DON'T force square */
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .exp-img img {
+      width: 100%;
+      height: auto;          /* keeps original proportions */
+      object-fit: contain;   /* safe fallback */
+      display: block;
+      background: transparent; /* no background */
+    }
+
+    /* Text */
+    .exp-text {
+      flex: 1;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .role {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .period {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .company {
+      color: var(--accent2);
+      font-size: 0.85rem;
+      margin: 0.15rem 0 0.5rem;
+    }
+
+    .exp-text p {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    /* ── Projects ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--text);
+      display: block;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+    }
+
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(108,99,255,0.2);
+    }
+
+    .exp-img {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .exp-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .exp-content {
+      flex: 1;
+    }
+
+    .exp-content .role {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .exp-content .company {
+      color: var(--accent2);
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .exp-content .period {
+      color: var(--muted);
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-content p {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .project-thumb {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .project-card:hover .project-thumb img { transform: scale(1.06); }
+
+    /* Placeholder when no image */
+    .project-thumb-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      font-size: 2rem;
+    }
+
+    .project-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(13,13,15,0.75);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project-overlay span {
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transform: translateY(10px);
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover .project-overlay {
+      opacity: 1;
+    }
+
+    .project-card:hover .project-overlay span {
+      transform: translateY(0);
+    }
+
+    .project-info {
+      padding: 1rem 1.1rem 1.2rem;
+    }
+
+    .project-info h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .project-info p {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      background: rgba(108,99,255,0.12);
+      color: var(--accent2);
+      border: 1px solid rgba(108,99,255,0.2);
+    }
+
+    /* ── Resume ── */
+    .resume-section {
+      text-align: center;
+    }
+
+    .resume-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      max-width: 420px;
+      width: 100%;
+    }
+
+    .resume-icon {
+      width: 56px; height: 56px;
+      background: rgba(108,99,255,0.15);
+      border: 1px solid rgba(108,99,255,0.3);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    /* ── Contact ── */
+    .contact-grid {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-link {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.25s;
+    }
+
+    .contact-link:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(108,99,255,0.15);
+      color: var(--accent2);
+    }
+
+    .contact-icon {
+      width: 38px; height: 38px;
+      background: rgba(108,99,255,0.12);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* ── Fade-in animation ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .about-grid,
+      .projects-grid { grid-template-columns: repeat(2, 1fr); }
+      nav { padding: 0 1.25rem; }
+      .nav-links { gap: 1.25rem; }
+    }
+
+    @media (max-width: 600px) {
+      .exp-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .exp-img {
+        width: 100%;
+        height: 160px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .exp-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <span class="nav-logo">YourName.eng</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-tag">Engineering Portfolio</div>
+  <h1 class="fade-up delay-1">Hi, I'm <span>Your Name</span></h1>
+  <p class="fade-up delay-2">Mechanical / Software / Electrical Engineer building things that matter. Based in [City].</p>
+  <div class="hero-cta fade-up delay-3">
+    <a href="#projects" class="btn btn-primary">View Projects</a>
+    <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── About ── -->
+<section id="about">
+  <p class="section-label">About</p>
+  <h2 class="section-title">Who I am</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm an engineering student / professional passionate about solving complex problems through design, analysis, and prototyping. I thrive at the intersection of theory and hands-on building.</p>
+      <p>When I'm not in the lab, I'm exploring new frameworks, contributing to open-source hardware projects, or hiking somewhere with no cell service.</p>
+      <a href="#contact" class="btn btn-ghost" style="margin-top:0.5rem; display:inline-flex;">Say hello →</a>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card"><div class="num">12+</div><div class="label">Projects Completed</div></div>
+      <div class="stat-card"><div class="num">3</div><div class="label">Years Experience</div></div>
+      <div class="stat-card"><div class="num">5</div><div class="label">Internships</div></div>
+      <div class="stat-card"><div class="num">2</div><div class="label">Publications</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Experience ── -->
+<section id="experience">
+  <p class="section-label">Career</p>
+  <h2 class="section-title">Experience</h2>
+  <p class="section-sub">Roles and teams I've contributed to.</p>
+  <div class="exp-grid">
+
+    <!-- Blue Sky Solar Racing -->
+    <div class="exp-item">
+      <div class="exp-img">
+        <img src="images/bluesky.png" alt="Company Logo">
+      </div>
+
+      <div class="exp-text">
+        <div class="exp-header">
+          <span class="role">Systems Engineer Intern</span>
+          <span class="period">May 2024 – Aug 2024</span>
+        </div>
+        <div class="company">Blue Sky Solar Racing</div>
+        <p>
+          Designed and validated subsystems for X product. Ran FEA simulations reducing weight by 15% while maintaining structural integrity.
+        </p>
+      </div>
+    </div>
+    
+    <!-- UTFR -->
+    <div class="exp-item">
+      <div class="exp-img">
+        <img src="images/utfr.png" alt="Company Logo">
+      </div>
+
+      <div class="exp-text">
+        <div class="exp-header">
+          <span class="role">Systems Engineer Intern</span>
+          <span class="period">May 2024 – Aug 2024</span>
+        </div>
+        <div class="company">University of Toronto Formula Racing</div>
+        <p>
+          Designed and validated subsystems for X product. Ran FEA simulations reducing weight by 15% while maintaining structural integrity.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Projects ── -->
+<section id="projects">
+  <p class="section-label">Work</p>
+  <h2 class="section-title">Projects</h2>
+  <p class="section-sub">Click any project to learn more.</p>
+  <div class="projects-grid">
+
+    <a href="project1.html" class="project-card">
+      <div class="project-thumb">
+        <!-- Replace src with your image: <img src="images/project1.jpg" alt="Project 1"/> -->
+        <div class="project-thumb-placeholder">⚙️</div>
+        <div class="project-overlay"><span>TEST</span><span>Research Project</span></div>
+      </div>
+      <div class="project-info">
+        <h3>Autonomous Ground Vehicle</h3>
+        <p>A fully autonomous robot with LIDAR-based obstacle avoidance and path planning.</p>
+        <div class="project-tags">
+          <span class="tag">ROS2</span>
+          <span class="tag">C++</span>
+          <span class="tag">SLAM</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="project2.html" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder">🔋</div>
+        <div class="project-overlay"><span>View Project →</span></div>
+      </div>
+      <div class="project-info">
+        <h3>Battery Management System</h3>
+        <p>Custom BMS PCB for a 48V LiFePO4 pack with cell balancing and CAN telemetry.</p>
+        <div class="project-tags">
+          <span class="tag">Altium</span>
+          <span class="tag">STM32</span>
+          <span class="tag">CAN Bus</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="project3.html" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder">🛩️</div>
+        <div class="project-overlay"><span>View Project →</span></div>
+      </div>
+      <div class="project-info">
+        <h3>Fixed-Wing UAV</h3>
+        <p>Designed and manufactured a 1.8m span composite airframe with Pixhawk autopilot integration.</p>
+        <div class="project-tags">
+          <span class="tag">CAD</span>
+          <span class="tag">FEA</span>
+          <span class="tag">Composites</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="project4.html" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder">🌡️</div>
+        <div class="project-overlay"><span>View Project →</span></div>
+      </div>
+      <div class="project-info">
+        <h3>Thermal Management CFD</h3>
+        <p>CFD analysis of a heat exchanger design, iterating geometry to improve efficiency by 18%.</p>
+        <div class="project-tags">
+          <span class="tag">ANSYS Fluent</span>
+          <span class="tag">Python</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="project5.html" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder">🦾</div>
+        <div class="project-overlay"><span>View Project →</span></div>
+      </div>
+      <div class="project-info">
+        <h3>Robotic Arm Controller</h3>
+        <p>6-DOF arm with custom inverse kinematics solver and ROS-based motion planning stack.</p>
+        <div class="project-tags">
+          <span class="tag">ROS</span>
+          <span class="tag">Python</span>
+          <span class="tag">MoveIt</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="project6.html" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder">📡</div>
+        <div class="project-overlay"><span>View Project →</span></div>
+      </div>
+      <div class="project-info">
+        <h3>LoRa Sensor Network</h3>
+        <p>Distributed wireless sensor mesh for environmental monitoring across a 5km campus.</p>
+        <div class="project-tags">
+          <span class="tag">LoRa</span>
+          <span class="tag">Embedded C</span>
+          <span class="tag">MQTT</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Resume ── -->
+<section id="resume" style="text-align:center;">
+  <p class="section-label">Resume</p>
+  <h2 class="section-title">Download My CV</h2>
+  <p class="section-sub" style="margin:0 auto 2rem;">A full overview of my education, skills, and experience.</p>
+  <div class="resume-card" style="margin:0 auto;">
+    <div class="resume-icon">📄</div>
+    <p style="color:var(--muted); font-size:0.9rem;">YourName_Resume_2025.pdf · 1 page</p>
+    <a href="resume.pdf" download class="btn btn-primary">Download Resume ↓</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── Contact ── -->
+<section id="contact">
+  <p class="section-label">Contact</p>
+  <h2 class="section-title">Let's connect</h2>
+  <p class="section-sub">Open to internships, full-time roles, and interesting projects.</p>
+  <div class="contact-grid">
+    <a href="mailto:your@email.com" class="contact-link">
+      <div class="contact-icon">✉️</div>
+      your@email.com
+    </a>
+    <a href="[linkedin.com](https://linkedin.com/in/yourname)" target="_blank" class="contact-link">
+      <div class="contact-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.36 4.26 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm1.78 13.02H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
+        </svg>
+      </div>
+      LinkedIn
+    </a>
+    <a href="[github.com](https://github.com/yourname)" target="_blank" class="contact-link">
+      <div class="contact-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.1.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57C20.57 21.8 24 17.3 24 12 24 5.37 18.63 0 12 0z"/>
+        </svg>
+      </div>
+      GitHub
+    </a>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>© 2025 Your Name · Built with HTML & CSS</p>
+</footer>
+
+</body>
+</html>
