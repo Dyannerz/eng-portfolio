@@ -9,15 +9,15 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0d0d0f;
-      --surface:   #141417;
-      --card:      #1a1a1f;
-      --border:    #2a2a32;
-      --accent:    #6c63ff;
-      --accent2:   #a78bfa;
-      --text:      #e8e8f0;
-      --muted:     #7c7c94;
-      --radius:    12px;
+      --bg:      #0d0d0f;
+      --surface: #141417;
+      --card:    #1a1a1f;
+      --border:  #2a2a32;
+      --accent:  #ec4899; /* Vibrant Pink (Tailwind Pink 500) */
+      --accent2: #f472b6; /* Soft Pink (Tailwind Pink 400) */
+      --text:    #e8e8f0;
+      --muted:   #7c7c94;
+      --radius:  12px;
     }
 
     html { scroll-behavior: smooth; }
@@ -88,11 +88,89 @@
       overflow: hidden;
     }
 
+    /* ───────────────── HERO SLIDESHOW ───────────────── */
+
+.hero {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* slides */
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* dark overlay */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(13,13,15,0.55);
+  z-index: 1;
+}
+
+/* content */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  padding: 2rem;
+}
+
+/* dots */
+.slider-dots {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 0.7rem;
+
+  z-index: 3;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.35);
+
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dot.active {
+  background: white;
+  transform: scale(1.2);
+}
+
     .hero::before {
       content: '';
       position: absolute;
       width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.12) 0%, transparent 70%);
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
@@ -618,14 +696,45 @@
 </nav>
 
 <!-- ── Hero ── -->
+<!-- ── Hero ── -->
 <div class="hero">
-  <div class="hero-tag">Engineering Portfolio</div>
-  <h1 class="fade-up delay-1">Hi, I'm <span>Your Name</span></h1>
-  <p class="fade-up delay-2">Mechanical / Software / Electrical Engineer building things that matter. Based in [City].</p>
-  <div class="hero-cta fade-up delay-3">
-    <a href="#projects" class="btn btn-primary">View Projects</a>
-    <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+
+  <!-- Slides -->
+  <div class="slide active">
+    <img src="images/slides/1.png" alt="">
   </div>
+
+  <div class="slide">
+    <img src="images/slides/2.png" alt="">
+  </div>
+
+  <!-- Dark Overlay -->
+  <div class="hero-overlay"></div>
+
+  <!-- Content -->
+  <div class="hero-content">
+    <div class="hero-tag">Engineering Portfolio</div>
+
+    <h1 class="fade-up delay-1">
+      Hi, I'm <span>Your Name</span>
+    </h1>
+
+    <p class="fade-up delay-2">
+      Mechanical / Software / Electrical Engineer building things that matter.
+    </p>
+
+    <div class="hero-cta fade-up delay-3">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+
+  <!-- Dots ADD FOR EVERY IMAGE --> 
+  <div class="slider-dots">
+    <span class="dot active"></span>
+    <span class="dot"></span>
+  </div>
+
 </div>
 
 <div class="divider"></div>
@@ -706,35 +815,37 @@
   <p class="section-sub">Click any project to learn more.</p>
   <div class="projects-grid">
 
-    <a href="project1.html" class="project-card">
+
+    <a href="bab.html" class="project-card">
       <div class="project-thumb">
         <!-- Replace src with your image: <img src="images/project1.jpg" alt="Project 1"/> -->
-        <div class="project-thumb-placeholder">⚙️</div>
-        <div class="project-overlay"><span>TEST</span><span>Research Project</span></div>
+        <img src="images/bab/main.png" alt="Aerobody Composite Schedule Optimization">
+        <div class="project-overlay"><span>Blue Sky Solar Racing</span></div>
       </div>
       <div class="project-info">
-        <h3>Autonomous Ground Vehicle</h3>
-        <p>A fully autonomous robot with LIDAR-based obstacle avoidance and path planning.</p>
+        <h3>Aerobody Composite Schedule Optimization</h3>
+        <p>Using CATIA Composites Design to optimize composite scheduling and manufacturability for the GEN12 solar car, 
+          reducing weight of component by 56% compaared to the previous design.</p>
         <div class="project-tags">
-          <span class="tag">ROS2</span>
-          <span class="tag">C++</span>
-          <span class="tag">SLAM</span>
+          <span class="tag">CATIA Composites Design</span>
+          <span class="tag">ANSYS</span>
+          <span class="tag">Manufacturing</span>
         </div>
       </div>
     </a>
 
-    <a href="project2.html" class="project-card">
+    <a href="rollcage.html" class="project-card">
       <div class="project-thumb">
-        <div class="project-thumb-placeholder">🔋</div>
-        <div class="project-overlay"><span>View Project →</span></div>
+        <img src="images/rollcage/main.png" alt="GEN12 Roll Cage Design">
+        <div class="project-overlay"><span>Blue Sky Solar Racing</span></div>
       </div>
       <div class="project-info">
-        <h3>Battery Management System</h3>
-        <p>Custom BMS PCB for a 48V LiFePO4 pack with cell balancing and CAN telemetry.</p>
+        <h3>GEN12 Roll Cage Design</h3>
+        <p>Process in topology optimizing the roll cage design for the GEN12 solar car, achieving a 40% mass reduction compared to the previous design.</p>
         <div class="project-tags">
-          <span class="tag">Altium</span>
-          <span class="tag">STM32</span>
-          <span class="tag">CAN Bus</span>
+          <span class="tag">CATIA</span>
+          <span class="tag">ANSYS</span>
+          <span class="tag">Topology Optimization</span>
         </div>
       </div>
     </a>
@@ -854,6 +965,52 @@
 <footer>
   <p>© 2025 Your Name · Built with HTML & CSS</p>
 </footer>
+
+
+<script>
+const slides = document.querySelectorAll(".slide");
+const dots = document.querySelectorAll(".dot");
+
+let currentSlide = 0;
+
+function showSlide(index) {
+
+  slides.forEach(slide => {
+    slide.classList.remove("active");
+  });
+
+  dots.forEach(dot => {
+    dot.classList.remove("active");
+  });
+
+  slides[index].classList.add("active");
+  dots[index].classList.add("active");
+
+  currentSlide = index;
+}
+
+/* auto slideshow */
+setInterval(() => {
+
+  let nextSlide = currentSlide + 1;
+
+  if(nextSlide >= slides.length){
+    nextSlide = 0;
+  }
+
+  showSlide(nextSlide);
+
+}, 4000);
+
+/* click dots */
+dots.forEach((dot, index) => {
+
+  dot.addEventListener("click", () => {
+    showSlide(index);
+  });
+
+});
+</script>
 
 </body>
 </html>

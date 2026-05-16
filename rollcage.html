@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roll Cage GEN12 — Design & Optimization</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #141417;
+      --card: #1a1a1f;
+      --border: #2a2a32;
+      --accent: #ec4899;
+      --accent2: #f472b6;
+      --text: #e8e8f0;
+      --muted: #7c7c94;
+      --radius: 12px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    /* navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(13, 13, 15, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo a {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover {
+      color: var(--accent2);
+    }
+
+    /* container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+
+    /* headings */
+    .page-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 2rem 0;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 2rem 0 0.75rem 0;
+      letter-spacing: -0.01em;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      border-left: 3px solid var(--accent);
+      padding-left: 1rem;
+    }
+
+    /* metric cards */
+    .metrics {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 2rem 0 1rem;
+    }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.8rem;
+      text-align: center;
+      flex: 1;
+      min-width: 150px;
+    }
+    .metric-number {
+      font-size: 2.1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* text + image two-col layout */
+    .two-col {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin: 2rem 0;
+      align-items: center;
+    }
+    .two-col .text {
+      flex: 1.2;
+    }
+    .two-col .media {
+      flex: 1;
+    }
+
+    .img-full {
+      width: 100%;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .img-full img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      max-height: 500px;
+    }
+
+    /* image grid (no cropping) */
+    .grid-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0;
+    }
+    .grid-card, .img-full {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+    }
+    .grid-card a, .img-full a {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    line-height: 0; /* Removes gap under image */
+    }
+    .grid-card:hover, .img-full:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+    .grid-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      background: #0a0a0c;
+    }
+    .grid-caption {
+      padding: 0.7rem 0.9rem 0.9rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    /* iteration showcase (row of small) */
+    .iteration-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem 0;
+      justify-content: center;
+    }
+    .iteration-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      width: 100px;
+      overflow: hidden;
+      text-align: center;
+      transition: 0.2s;
+    }
+    .iteration-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .iteration-item span {
+      font-size: 0.65rem;
+      color: var(--muted);
+      padding: 0.3rem;
+      display: inline-block;
+    }
+
+    /* callout box */
+    .callout {
+      background: rgba(236, 72, 153, 0.08);
+      border-left: 4px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+    }
+
+    /* button */
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      margin-top: 2rem;
+    }
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        padding: 5rem 1.2rem 3rem;
+      }
+      nav {
+        padding: 0 1.2rem;
+      }
+      .two-col {
+        flex-direction: column;
+      }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo"><a href="index.html">YourName.eng</a></span>
+  <a href="index.html" class="back-link">← Back to Portfolio</a>
+</nav>
+
+<div class="container">
+  <div class="page-label">Engineering case study</div>
+  <h1>GEN12 <span>Roll Cage</span> — Topology Optimization & FEA</h1>
+  <div class="lead">
+    A lightweight, regulation‑compliant roll cage designed for the GEN12 solar car.  
+    Achieved <strong>35% mass reduction</strong> while exceeding safety requirements across all load cases.
+  </div>
+
+  <!-- metric cards -->
+  <div class="metrics">
+    <div class="metric-card"><div class="metric-number">10.7 kg</div><div class="metric-label">Final Mass</div></div>
+    <div class="metric-card"><div class="metric-number">16.48 kg</div><div class="metric-label">Previous Design Mass</div></div>
+    <div class="metric-card"><div class="metric-number">35%</div><div class="metric-label">Weight Reduction</div></div>
+    <div class="metric-card"><div class="metric-number">17</div><div class="metric-label">Design Iterations</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Design Process -->
+  <h2 class="section-title">Design Process</h2>
+  <div class="section-sub">Topology‑driven development from solid block to tubular frame</div>
+  
+  <div class="two-col">
+    <div class="text">
+      <p style="margin-bottom: 1rem;">The design methodology began by defining a solid aluminum block envelope covering the minimum driver head clearance up to the canopy inner surface. Key attachment points to the main chassis and primary load paths were identified, then the entire geometry was imported into ANSYS Mechanical.</p>
+      <p>All relevant load cases (frontal impact, rollover, side intrusion) were applied, and a topology optimization study was performed. The resulting organic shape suggested an efficient material distribution — acting as a blueprint for the tubular spaceframe layout.</p>
+      <div class="callout">
+        <strong>📐 Topology optimization insight:</strong> the solver naturally removed material from low‑stress zones, revealing a truss‑like configuration that inspired the final tube routing and joint placements.
+      </div>
+    </div>
+    <div class="media">
+      <div class="img-full">
+        <!-- topology reference images: 17.png, 18.png, 19.png shown in a nice combined or represent first -->
+        <img src="images/rollcage/29.png" alt="Topology optimization result" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=Topology+Preview'">
+      </div>
+    </div>
+  </div>
+
+  <!-- Show 17,18,19 in a row (no crop) -->
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card">
+        <a href="images/rollcage/17.png" data-lightbox="rollcage-gallery" data-title="Initial optimization volume">
+            <img src="images/rollcage/17.png" alt="Topology step 1" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=17.png'">
+        </a>
+        <div class="grid-caption">Initial optimization volume</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/18.png" data-lightbox="rollcage-gallery" data-title="Optimized shape">
+            <img src="images/rollcage/18.png" alt="Topology step 2" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=18.png'">
+        </a>
+        <div class="grid-caption">Optimized shape</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/19.png" data-lightbox="rollcage-gallery" data-title="Optimized shape">
+            <img src="images/rollcage/19.png" alt="Topology step 3" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=19.png'">
+        </a>
+        <div class="grid-caption">Optimized shape</div>
+    </div>
+  </div>
+
+  <p style="margin: 1rem 0 0.5rem;">After extracting the optimal shape, the roll cage was translated into a tubular CAD model using CATIA. Multiple iterations were then executed to fine‑tune geometry, joint angles, and tube diameters while respecting manufacturing constraints.</p>
+
+  <div class="divider"></div>
+
+  <!-- Iteration 1 & early changes -->
+  <h2 class="section-title">Iterative Refinement</h2>
+  <div class="section-sub">From initial prototype to final high‑margin design</div>
+
+  <!-- 22.png: first iteration, side bar bending -->
+  <div class="two-col">
+    <div class="media">
+      <div class="img-full">
+        <a href="images/rollcage/22.png" data-lightbox="rollcage-gallery" data-title="First iteration safety factor">
+            <img src="images/rollcage/22.png" alt="First iteration safety factor" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=22.png'">
+        </a>
+    </div>
+    </div>
+    <div class="text">
+      <p><strong>Iteration 1 — side bar clearance:</strong> The initial rough geometry highlighted an ergonomic issue: the side bars restricted driver movement. To improve ingress/egress and comfort, the side bars were bent outward slightly, creating more shoulder room while maintaining structural stiffness.</p>
+      <p>Safety factor remained above 1.0 in most zones, but the main hoop exhibited localized stress concentrations near the bend radius.</p>
+    </div>
+  </div>
+
+  <!-- 23.png: hoop larger radius + support bar -->
+  <div class="two-col" style="flex-direction: row-reverse;">
+    <div class="media">
+      <div class="img-full">
+    <a href="images/rollcage/23.png" data-lightbox="rollcage-gallery" data-title="Hoop radius increase">
+        <img src="images/rollcage/23.png" alt="Hoop radius increase" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=23.png'">
+    </a>
+</div>
+    </div>
+    <div class="text">
+      <p><strong>Iteration 2 — hoop optimization:</strong> The main hoop was showing a safety factor below 1.0. The solution involved increasing the bend radius, which reduced stress concentration dramatically. Additionally, a diagonal support bar linking the hoop to the side structure was introduced, improving load distribution.</p>
+      <p>These changes raised the minimum safety factor to >1.1 in the hoop region, but shear stress at the top attachment required further attention.</p>
+    </div>
+  </div>
+
+  <!-- 21.png + 20.png: vertical support angling -->
+  <div class="two-col">
+    <div class="media">
+      <div class="img-full">
+        <a href="images/rollcage/21.png" data-lightbox="rollcage-gallery" data-title="Angled support iteration">
+            <img src="images/rollcage/21.png" alt="Angled support iteration" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=21.png'">
+        </a>
+    </div>
+    </div>
+    <div class="text">
+      <p><strong>Iteration 4–7 — vertical strut angling:</strong> A vertical bar supporting the top hoop was added, but early FEA revealed excessive shear stress at the top joint. By re‑angling the strut to approximately 45° relative to the backstay and main hoop, the load transferred more efficiently into the main roll structure. A cross bar was added at the top plane and the rear diagonal was removed (which previously caused undesirable stress peaks).</p>
+        <div class="img-full" style="margin-top: 1rem;">
+            <a href="images/rollcage/20.png" data-lightbox="rollcage-gallery" data-title="Vertical support shear concentration">
+                <img src="images/rollcage/20.png" alt="Vertical support shear concentration" onerror="this.src='https://placehold.co/600x200/1a1a2e/ec4899?text=20.png'">
+            </a>
+        </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>✅ Design evolution:</strong> After 17 distinct iterations — each addressing stress risers, driver packaging, and manufacturing feasibility — every load case achieved a safety factor above the regulation threshold of 1.1. The final assembly weighs only 10.7 kg, a 35% reduction from the previous GEN11 design (16.48 kg).
+  </div>
+
+  <!-- all iterations grid (2.png … 16.png) full size, no crop -->
+  <h2 class="section-title">Iteration Gallery</h2>
+  <div class="section-sub">Progression of 3D concept models (Iteration 1 → 17)</div>
+  <div class="grid-images">
+    <div class="grid-card">
+        <a href="images/rollcage/2.png" data-lightbox="rollcage-gallery" data-title="Iteration 2">
+            <img src="images/rollcage/2.png" alt="iter 2" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=2.png'">
+        </a>
+        <div class="grid-caption">Iteration 2</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/3.png" data-lightbox="rollcage-gallery" data-title="Iteration 3">
+            <img src="images/rollcage/3.png" alt="iter 3" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=3.png'">
+        </a>
+        <div class="grid-caption">Iteration 3</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/4.png" data-lightbox="rollcage-gallery" data-title="Iteration 4">
+            <img src="images/rollcage/4.png" alt="iter 4" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=4.png'">
+        </a>
+        <div class="grid-caption">Iteration 4</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/5.png" data-lightbox="rollcage-gallery" data-title="Iteration 5">
+            <img src="images/rollcage/5.png" alt="iter 5" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=5.png'">
+        </a>
+        <div class="grid-caption">Iteration 5</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/6.png" data-lightbox="rollcage-gallery" data-title="Iteration 6">
+            <img src="images/rollcage/6.png" alt="iter 6" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=6.png'">
+        </a>
+        <div class="grid-caption">Iteration 6</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/7.png" data-lightbox="rollcage-gallery" data-title="Iteration 7">
+            <img src="images/rollcage/7.png" alt="iter 7" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=7.png'">
+        </a>
+        <div class="grid-caption">Iteration 7</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/8.png" data-lightbox="rollcage-gallery" data-title="Iteration 8">
+            <img src="images/rollcage/8.png" alt="iter 8" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=8.png'">
+        </a>
+        <div class="grid-caption">Iteration 8</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/9.png" data-lightbox="rollcage-gallery" data-title="Iteration 9">
+            <img src="images/rollcage/9.png" alt="iter 9" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=9.png'">
+        </a>
+        <div class="grid-caption">Iteration 9</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/10.png" data-lightbox="rollcage-gallery" data-title="Iteration 10">
+            <img src="images/rollcage/10.png" alt="iter 10" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=10.png'">
+        </a>
+        <div class="grid-caption">Iteration 10</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/11.png" data-lightbox="rollcage-gallery" data-title="Iteration 11">
+            <img src="images/rollcage/11.png" alt="iter 11" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=11.png'">
+        </a>
+        <div class="grid-caption">Iteration 11</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/12.png" data-lightbox="rollcage-gallery" data-title="Iteration 12">
+            <img src="images/rollcage/12.png" alt="iter 12" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=12.png'">
+        </a>
+        <div class="grid-caption">Iteration 12</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/13.png" data-lightbox="rollcage-gallery" data-title="Iteration 13">
+            <img src="images/rollcage/13.png" alt="iter 13" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=13.png'">
+        </a>
+        <div class="grid-caption">Iteration 13</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/14.png" data-lightbox="rollcage-gallery" data-title="Iteration 14">
+            <img src="images/rollcage/14.png" alt="iter 14" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=14.png'">
+        </a>
+        <div class="grid-caption">Iteration 14</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/15.png" data-lightbox="rollcage-gallery" data-title="Iteration 15">
+            <img src="images/rollcage/15.png" alt="iter 15" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=15.png'">
+        </a>
+        <div class="grid-caption">Iteration 15</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/16.png" data-lightbox="rollcage-gallery" data-title="Iteration 16">
+            <img src="images/rollcage/16.png" alt="iter 16" onerror="this.src='https://placehold.co/400x300/141417/ec4899?text=16.png'">
+        </a>
+        <div class="grid-caption">Iteration 16</div>
+    </div>
+  </div>
+
+  <!-- FEA Simulation Results: 24.png ... 28.png -->
+  <h2 class="section-title">Finite Element Analysis — Safety Factor Maps</h2>
+  <div class="section-sub">All load cases validated with SF > 1.1 after optimization</div>
+  <div class="grid-images">
+    <div class="grid-card">
+        <a href="images/rollcage/24.png" data-lightbox="rollcage-gallery" data-title="Load Case A">
+            <img src="images/rollcage/24.png" alt="Case A" onerror="this.src='https://placehold.co/500x400/141417/ec4899?text=Case+A'">
+        </a>
+        <div class="grid-caption">Load Case A</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/25.png" data-lightbox="rollcage-gallery" data-title="Load Case B">
+            <img src="images/rollcage/25.png" alt="Case B" onerror="this.src='https://placehold.co/500x400/141417/ec4899?text=Case+B'">
+        </a>
+        <div class="grid-caption">Load Case B</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/26.png" data-lightbox="rollcage-gallery" data-title="Load Case C">
+            <img src="images/rollcage/26.png" alt="Case C" onerror="this.src='https://placehold.co/500x400/141417/ec4899?text=Case+C'">
+        </a>
+        <div class="grid-caption">Load Case C</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/27.png" data-lightbox="rollcage-gallery" data-title="Load Case D">
+            <img src="images/rollcage/27.png" alt="Case D" onerror="this.src='https://placehold.co/500x400/141417/ec4899?text=Case+D'">
+        </a>
+        <div class="grid-caption">Load Case D</div>
+    </div>
+
+    <div class="grid-card">
+        <a href="images/rollcage/28.png" data-lightbox="rollcage-gallery" data-title="Load Case E">
+            <img src="images/rollcage/28.png" alt="Case E" onerror="this.src='https://placehold.co/500x400/141417/ec4899?text=Case+E'">
+        </a>
+        <div class="grid-caption">Load Case E</div>
+    </div>
+  </div>
+
+  <!-- final outcome summary + simulation progress mention -->
+  <div class="divider"></div>
+ 
+
+  <!-- small note about iterative simulation snapshots (extra images not shown but referenced) -->
+  <div class="callout" style="margin-top: 1rem;">
+    💡 Each iteration was accompanied by a full set of FEA reports: from the early sub‑1.0 safety factor in the main hoop to the final robust design. The attached simulation slides (iterations 2–17) highlight the progressive improvement in stress distribution and safety margins.
+  </div>
+
+  <a href="index.html" class="btn-back">← Back to main portfolio</a>
+</div>
+
+<footer>
+  <p>© 2025 Your Name · Roll Cage GEN12 Case Study — CATIA, ANSYS, Topology Optimization</p>
+</footer>
+
+<!-- ensure all images are not cropped by any extra style; object-fit contain on all img in grids -->
+</body>
+</html>
