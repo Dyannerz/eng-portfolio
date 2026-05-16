@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bottom Aerobody — Composite Core Optimization</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #141417;
+      --card: #1a1a1f;
+      --border: #2a2a32;
+      --accent: #ec4899;
+      --accent2: #f472b6;
+      --text: #e8e8f0;
+      --muted: #7c7c94;
+      --radius: 12px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(13, 13, 15, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo a {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent2); }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+
+    .page-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 2rem 0;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 2rem 0 0.75rem 0;
+      letter-spacing: -0.01em;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      border-left: 3px solid var(--accent);
+      padding-left: 1rem;
+    }
+
+    .metrics {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 2rem 0 1rem;
+    }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.8rem;
+      text-align: center;
+      flex: 1;
+      min-width: 150px;
+    }
+    .metric-number {
+      font-size: 2.1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    .two-col {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin: 2rem 0;
+      align-items: center;
+    }
+    .two-col .text { flex: 1.2; }
+    .two-col .media { flex: 1; }
+
+    .img-full {
+      width: 100%;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .img-full img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      max-height: 500px;
+    }
+
+    .grid-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .grid-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .grid-card a {
+      display: block;
+      width: 100%;
+      text-decoration: none;
+      line-height: 0;
+    }
+    .grid-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+    .grid-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      background: #0a0a0c;
+    }
+    .grid-caption {
+      padding: 0.7rem 0.9rem 0.9rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .callout {
+      background: rgba(236, 72, 153, 0.08);
+      border-left: 4px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+    }
+    .callout strong { color: var(--accent2); }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      margin-top: 2rem;
+    }
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1.5rem 0;
+      font-size: 0.8rem;
+    }
+    th, td {
+      padding: 0.75rem 0.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: rgba(236, 72, 153, 0.15);
+      color: var(--accent2);
+      font-weight: 600;
+    }
+    tr:hover { background: rgba(236, 72, 153, 0.05); }
+
+    .mentor-grid {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+      justify-content: center;
+    }
+    .mentor-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      text-align: center;
+      width: 200px;
+    }
+    .mentor-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+    .mentor-card h4 { color: var(--accent2); margin-bottom: 0.25rem; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .container { padding: 5rem 1.2rem 3rem; }
+      nav { padding: 0 1.2rem; }
+      .two-col { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo"><a href="index.html">YourName.eng</a></span>
+  <a href="index.html" class="back-link">← Back to Portfolio</a>
+</nav>
+
+<div class="container">
+  <div class="page-label">Composite structure optimization</div>
+  <h1>Bottom Aerobody <span>Core Optimization</span> — CATIA Composites & ANSYS</h1>
+  <div class="lead">
+    Strategic core material removal and placement to reduce mass while maintaining structural integrity under dynamic loads.<br>
+    Achieved <strong>31% weight reduction</strong> (31.98 kg → 21.94 kg) compared to baseline design.
+  </div>
+
+  <div class="metrics">
+    <div class="metric-card"><div class="metric-number">21.94 kg</div><div class="metric-label">Final Mass (Iteration 4)</div></div>
+    <div class="metric-card"><div class="metric-number">31.98 kg</div><div class="metric-label">Baseline Design Mass</div></div>
+    <div class="metric-card"><div class="metric-number">31%</div><div class="metric-label">Total Weight Reduction</div></div>
+    <div class="metric-card"><div class="metric-number">4</div><div class="metric-label">Major Iterations</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Project Idea -->
+  <h2 class="section-title">Project Objective</h2>
+  <div class="section-sub">Core material reduction without compromising structural soundness</div>
+  <p style="margin-bottom: 1rem;">The goal was to remove core material and the subsequent two ply layers to achieve substantial weight savings. Since the entire car is manufactured from composites, experimenting with core placement and behaviour was a high-value initiative. No race regulations apply to the aerobody's structural integrity, and there are no direct forces acting on the surface — providing complete design freedom. The only constraints were to prevent excessive deformation under acceleration and dynamic loads, and to avoid introducing additional stiffeners.</p>
+  <div class="callout">
+    <strong>🎯 Design freedom:</strong> No structural regulations + no direct surface forces → full flexibility to optimize core layout for minimum weight while ensuring adequate stiffness under 1g acceleration, gravity, and dynamic cornering loads.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Design Process + Baseline -->
+  <h2 class="section-title">Design Process & Baseline Analysis</h2>
+  <div class="two-col">
+    <div class="text">
+      <p><strong>Baseline assessment:</strong> The original BAB showed up to 9 mm deformation near the rear (butt) section, but was significantly over-engineered in other regions. Core material could therefore be removed from low-stress areas without affecting performance.</p>
+      <p><strong>Core material selection:</strong> Thick <strong>Rohacell 200</strong> was used for high-load areas (chassis bottom), while <strong>¼ or ⅛ Divinycell</strong> was applied to the remaining body. The choice of core type and thickness was determined by local stress distribution from FEA.</p>
+      <p><strong>Manufacturability check:</strong> Each ply region was validated using CATIA Composites Design producibility tools (see <em>3.png</em>).</p>
+    </div>
+    <div class="media">
+      <div class="img-full">
+        <a href="images/bab/3.png" data-lightbox="gallery-bab" data-title="Producibility Table — ply validation">
+          <img src="images/bab/3.png" alt="Producibility table" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=3.png'">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANSYS Setup -->
+  <h2 class="section-title">ANSYS Simulation Setup</h2>
+  <div class="two-col" style="flex-direction: row-reverse;">
+    <div class="media">
+      <div class="img-full">
+        <a href="images/bab/1.png" data-lightbox="gallery-bab" data-title="Fixed supports & boundary conditions">
+          <img src="images/bab/1.png" alt="Fixed supports">
+        </a>
+      </div>
+    </div>
+    <div class="text">
+      <ul style="color: var(--muted); padding-left: 1.2rem;">
+        <li>All components contacting the BAB were included (top aerobody excluded as it attaches to chassis).</li>
+        <li>Bonded contacts: stiffeners and chassis to BAB.</li>
+        <li>Fixed supports at suspension clevises (hardpoints).</li>
+        <li>Point masses: driver, battery box, roll cage.</li>
+        <li>Outward pressure applied to simulate Bernoulli’s principle (aerodynamic suction).</li>
+        <li>1g forward acceleration + gravity.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid-images" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="grid-card">
+      <a href="images/bab/1.png" data-lightbox="gallery-bab" data-title="Boundary conditions: fixed supports at suspension points"><img src="images/bab/1.png" alt="setup 1"></a>
+      <div class="grid-caption">Fixed supports & load application</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/bab/2.png" data-lightbox="gallery-bab" data-title="Load cases: acceleration, gravity, point masses"><img src="images/bab/2.png" alt="setup 2"></a>
+      <div class="grid-caption">Load cases & contact definitions</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Baseline: ryan_acp + ryan_sim -->
+  <h2 class="section-title">Baseline Simulation (Original BAB)</h2>
+  <div class="two-col">
+    <div class="media">
+      <div class="img-full"><a href="images/bab/ryan_acp.png" data-lightbox="gallery-bab" data-title="Baseline core layout"><img src="images/bab/ryan_acp.png" alt="baseline acp"></a></div>
+    </div>
+    <div class="media">
+      <div class="img-full"><a href="images/bab/ryan_sim.png" data-lightbox="gallery-bab" data-title="Baseline deformation ~9.4mm"><img src="images/bab/ryan_sim.png" alt="baseline sim"></a></div>
+    </div>
+  </div>
+  <p>The original design exhibited ~9.4 mm peak deformation near the rear, but many areas were over-engineered. The first improvement step involved placing core at bends and removing core along the width of the car where stresses were minimal.</p>
+
+  <div class="divider"></div>
+
+  <!-- Iteration 1 -->
+  <h2 class="section-title">Iteration 1 — Skeletal Core Concept</h2>
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card" style="grid-column: 2;"><a href="images/bab/iter1_catia.png" data-lightbox="gallery-bab" data-title="Iteration 1 CATIA model"><img src="images/bab/iter1_catia.png" alt="iter1 catia"></a><div class="grid-caption">CATIA skeletal core layout</div></div>
+  </div>
+  <p>The first iteration served as an initial proof of concept focused on exploring and understanding the capabilities of the CATIA Composites Design tool. During this phase, the foundational skeletal core structure was developed and established, providing the primary framework that will guide and support future design iterations.</p>
+
+  <!-- Iteration 2 -->
+  <h2 class="section-title">Iteration 2 — Edge Reinforcement</h2>
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card"><a href="images/bab/iter2_catia.png" data-lightbox="gallery-bab" data-title="Iteration 2 CATIA"><img src="images/bab/iter2_catia.png" alt="iter2 catia"></a><div class="grid-caption">CATIA model</div></div>
+    <div class="grid-card"><a href="images/bab/iter2_acp.png" data-lightbox="gallery-bab" data-title="Iteration 2 core thickness"><img src="images/bab/iter2_acp.png" alt="iter2 acp"></a><div class="grid-caption">Core thickness map (Rohacell 200)</div></div>
+    <div class="grid-card"><a href="images/bab/iter2_sim.png" data-lightbox="gallery-bab" data-title="Iteration 2 deformation"><img src="images/bab/iter2_sim.png" alt="iter2 sim"></a><div class="grid-caption">Deformation: 2.66 mm (stiffer but heavier)</div></div>
+  </div>
+  <p>Edges were reinforced to improve stiffness. However, using only thick Rohacell 200 throughout resulted in higher mass (35.09 kg) than the original — confirming that a mixed-core strategy was necessary.</p>
+
+  <!-- Iteration 3 -->
+  <h2 class="section-title">Iteration 3 — Mixed Core Types</h2>
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card"><a href="images/bab/iter3_catia.png" data-lightbox="gallery-bab" data-title="Iteration 3 core layup"><img src="images/bab/iter3_catia.png" alt="iter3 catia"></a><div class="grid-caption">Multi-density core (Rohacell + Divinycell)</div></div>
+    <div class="grid-card"><a href="images/bab/iter3_acp.png" data-lightbox="gallery-bab" data-title="Iteration 3 core thickness"><img src="images/bab/iter3_acp.png" alt="iter3 acp"></a><div class="grid-caption">Core thickness map (Rohacell 200)</div></div>
+    <div class="grid-card"><a href="images/bab/iter3_sim.png" data-lightbox="gallery-bab" data-title="Iteration 3 deformation"><img src="images/bab/iter3_sim.png" alt="iter3 sim"></a><div class="grid-caption">Deformation: 8.88 mm (lighter, good performance)</div></div>
+  </div>
+  <p>This iteration removed even more core and introduced different core types/thicknesses. Structural performance improved while weight dropped significantly (25.88 kg) — proving that selective core removal was viable.</p>
+
+  <!-- Iteration 4 -->
+  <h2 class="section-title">Iteration 4 — Final Optimized Layout</h2>
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card"><a href="images/bab/iter4_catia.png" data-lightbox="gallery-bab" data-title="Iteration 4 CATIA"><img src="images/bab/iter4_catia.png" alt="iter4 catia"></a><div class="grid-caption">Refined core between stiffeners</div></div>
+    <div class="grid-card"><a href="images/bab/iter4_acp.png" data-lightbox="gallery-bab" data-title="Iteration 4 thickness"><img src="images/bab/iter4_acp.png" alt="iter4 acp"></a><div class="grid-caption">Thickness optimization (Rohacell + Divinycell)</div></div>
+    <div class="grid-card"><a href="images/bab/iter4_sim.png" data-lightbox="gallery-bab" data-title="Iteration 4 deformation"><img src="images/bab/iter4_sim.png" alt="iter4 sim"></a><div class="grid-caption">Deformation: 9.21 mm (within limit, 21.94 kg)</div></div>
+  </div>
+  <div class="callout">
+    <strong>✅ Final iteration insight:</strong> The skeletal core from Iteration 1 already included integrated stiffeners. Recognizing redundancy, core was placed between stiffeners and additional material was removed. The final design achieves favourable deformation (≈9.2 mm) at only <strong>21.94 kg</strong> — a 31% reduction from baseline.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Resin & Weight Calculation Table -->
+  <h2 class="section-title">Weight & Resin Consumption Analysis</h2>
+  <div class="section-sub">Fiber-to-resin ratio 60:40 | Resin = fabric weight / 1.5 | Core density: 700 g/m²</div>
+  <table>
+    <thead>
+      <tr><th>Iteration</th><th>Rohacell (kg)</th><th>Divinycell (kg)</th><th>Core Area (m²)</th><th>Resin on Core (kg)</th><th>Fiber (kg)</th><th>Resin on Fiber (kg)</th><th><strong>Total (kg)</strong></th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Baseline (Ryan)</td><td>4.23</td><td>1.28</td><td>6.78</td><td>4.75</td><td>13.03</td><td>8.69</td><td><strong>31.98</strong></td></tr>
+      <tr><td>Iteration 1</td><td>7.46</td><td>0</td><td>3.03</td><td>2.12</td><td>7.88</td><td>5.25</td><td><strong>22.71</strong></td></tr>
+      <tr><td>Iteration 2</td><td>14.49</td><td>0</td><td>5.89</td><td>4.12</td><td>9.89</td><td>6.59</td><td><strong>35.09</strong></td></tr>
+      <tr><td>Iteration 3</td><td>3.60</td><td>1.00</td><td>5.01</td><td>3.51</td><td>10.66</td><td>7.11</td><td><strong>25.88</strong></td></tr>
+      <tr style="background: rgba(236,72,153,0.1);"><td><strong>Iteration 4 (Final)</strong></td><td><strong>3.60</strong></td><td><strong>0.55</strong></td><td><strong>3.31</strong></td><td><strong>2.32</strong></td><td><strong>9.28</strong></td><td><strong>6.19</strong></td><td><strong>21.94</strong></td></tr>
+    </tbody>
+  </table>
+  <p>Iteration 4 provides the best trade-off: minimal core area (3.31 m²) combined with strategic use of lighter Divinycell (0.55 kg) and reduced fiber mass (9.28 kg). The resin consumption scales accordingly, resulting in the lowest total weight while preserving structural integrity.</p>
+
+  <div class="divider"></div>
+
+  <!-- Mentorship Section -->
+  <h2 class="section-title">Knowledge Transfer & Mentorship</h2>
+  <div class="section-sub">Ensuring composite design expertise endures beyond the project</div>
+  <p>Beyond technical execution, I took an active role in teaching my CATIA Composites Design workflow to two team members, <strong>Anna</strong> and <strong>Randi</strong>. Each developed their own independent core layouts, applying the same optimization principles. This mentorship effort ensures that composite design and simulation capabilities remain within the team for future generations.</p>
+  <div class="mentor-grid">
+    <div class="mentor-card">
+      <a href="images/bab/z_anna.png" data-lightbox="gallery-bab" data-title="Anna's composite layout design">
+        <img src="images/bab/z_anna.png" alt="Anna's design">
+      </a>
+      <h4>Anna</h4>
+      <p style="font-size:0.7rem; color:var(--muted)">Independent core layout</p>
+    </div>
+    <div class="mentor-card">
+      <a href="images/bab/z_randi.png" data-lightbox="gallery-bab" data-title="Randi's composite layout design">
+        <img src="images/bab/z_randi.png" alt="Randi's design">
+      </a>
+      <h4>Randi</h4>
+      <p style="font-size:0.7rem; color:var(--muted)">Independent core layout</p>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>📚 Legacy & sustainability:</strong> Documented workflow and guided hands-on training so that future teams can continue refining composite structures without losing institutional knowledge. Both Anna and Randi now independently run CATIA Composites Design analyses.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Related project link -->
+  <div class="callout" style="text-align: center;">
+    <strong>🔗 Related work:</strong> Explore the full <a href="composites-workflow.html" style="color: var(--accent2);">Composites Design Workflow project →</a> (detailed ply book, producibility validation, and manufacturing guidelines)
+  </div>
+
+  <a href="index.html" class="btn-back">← Back to main portfolio</a>
+</div>
+
+<footer>
+  <p>© 2025 Your Name · Bottom Aerobody Core Optimization — CATIA Composites, ANSYS, Lightweight Composites</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<script>
+  lightbox.option({
+    'resizeDuration': 200,
+    'wrapAround': true,
+    'albumLabel': "Image %1 of %2"
+  });
+</script>
+</body>
+</html>
