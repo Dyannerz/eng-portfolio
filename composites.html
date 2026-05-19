@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Composites Design Workflow — CATIA & Digital Manufacturing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #141417;
+      --card: #1a1a1f;
+      --border: #2a2a32;
+      --accent: #ec4899;
+      --accent2: #f472b6;
+      --text: #e8e8f0;
+      --muted: #7c7c94;
+      --radius: 12px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(13, 13, 15, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo a {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent2); }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+
+    .page-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 2rem 0;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 2rem 0 0.75rem 0;
+      letter-spacing: -0.01em;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      border-left: 3px solid var(--accent);
+      padding-left: 1rem;
+    }
+
+    .metrics {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 2rem 0 1rem;
+    }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.8rem;
+      text-align: center;
+      flex: 1;
+      min-width: 150px;
+    }
+    .metric-number {
+      font-size: 2.1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    .two-col {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin: 2rem 0;
+      align-items: center;
+    }
+    .two-col .text { flex: 1.2; }
+    .two-col .media { flex: 1; }
+
+    .img-full {
+      width: 100%;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .img-full img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      max-height: 500px;
+    }
+
+    .grid-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .grid-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .grid-card a {
+      display: block;
+      width: 100%;
+      text-decoration: none;
+      line-height: 0;
+    }
+    .grid-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+    .grid-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      background: #0a0a0c;
+    }
+    .grid-caption {
+      padding: 0.7rem 0.9rem 0.9rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .callout {
+      background: rgba(236, 72, 153, 0.08);
+      border-left: 4px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+    }
+    .callout strong { color: var(--accent2); }
+
+    .project-row {
+      display: flex;
+      gap: 2rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--text);
+      flex: 1;
+      transition: all 0.25s;
+      cursor: pointer;
+    }
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(108,99,255,0.2);
+    }
+    .project-thumb {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+    .project-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .project-card:hover .project-thumb img { transform: scale(1.06); }
+    .project-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(13,13,15,0.75);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .project-card:hover .project-overlay { opacity: 1; }
+    .project-overlay span {
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transform: translateY(10px);
+      transition: transform 0.3s ease;
+    }
+    .project-card:hover .project-overlay span { transform: translateY(0); }
+    .project-info { padding: 1rem 1.1rem 1.2rem; }
+    .project-info h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .project-info p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      background: rgba(108,99,255,0.12);
+      color: var(--accent2);
+      border: 1px solid rgba(108,99,255,0.2);
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      margin-top: 2rem;
+    }
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .container { padding: 5rem 1.2rem 3rem; }
+      nav { padding: 0 1.2rem; }
+      .two-col { flex-direction: column; }
+      .project-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo"><a href="index.html">YourName.eng</a></span>
+  <a href="index.html" class="back-link">← Back to Portfolio</a>
+</nav>
+
+<div class="container">
+  <div class="page-label">Digital composite engineering</div>
+  <h1>CATIA Composites Design <span>Workflow</span> — From CAD to Manufacturing</h1>
+  <div class="lead">
+    Modernizing composite part design, validation, and manufacturing for solar car applications.<br>
+    Achieved <strong>63% reduction in material waste</strong> and standardized processes across 20+ team members.
+  </div>
+
+  <div class="metrics">
+    <div class="metric-card"><div class="metric-number">63%</div><div class="metric-label">Material Waste Reduction</div></div>
+    <div class="metric-card"><div class="metric-number">50+</div><div class="metric-label">Page Technical Manual</div></div>
+    <div class="metric-card"><div class="metric-number">20+</div><div class="metric-label">Team Members Trained</div></div>
+    <div class="metric-card"><div class="metric-number">100%</div><div class="metric-label">Digital Ply Accuracy</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Project Idea -->
+  <h2 class="section-title">Modernizing Composite Workflows</h2>
+  <div class="section-sub">Why traditional methods fall short — and how CATIA Composites Design solves it</div>
+  <p>Traditional composite workflows rely heavily on manual ply tracing, hand-cut templates, and disconnected CAD-to-simulation pipelines — introducing manufacturing inaccuracies, material waste, and inconsistent structural behaviour. By implementing the <strong>CATIA Composites Design workbench</strong> into the team workflow, composite layups can now be designed directly on CAD geometry while maintaining manufacturing accuracy and simulation fidelity throughout the entire process.</p>
+  
+  <div class="callout">
+    <strong>🔧 Core capabilities implemented:</strong> Precise ply/core placement on complex surfaces · Manufacturing-aware validation · Automated flat pattern generation · Streamlined CAD-to-ANSYS ACP export · Nesting-ready cut files.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Design Workflow -->
+  <h2 class="section-title">Design Workflow</h2>
+  <div class="section-sub">End-to-end digital composite development</div>
+  <div class="two-col">
+    <div class="text">
+      <p>The workflow begins by defining composite surfaces and manufacturing zones directly in CATIA. Plies, core regions, and fiber orientations are then created on the geometry while considering draping behaviour and manufacturability.</p>
+      <ul style="color: var(--muted); padding-left: 1.2rem; margin-top: 0.5rem;">
+        <li>Creating ply books and stacking sequences</li>
+        <li>Assigning fiber orientations and materials</li>
+        <li>Designing core transition regions</li>
+        <li>Generating flat patterns for manufacturing</li>
+        <li>Exporting layups into ANSYS ACP for FEA validation</li>
+        <li>Generating splicing curves and flattened shapes</li>
+        <li>Nesting shapes onto fabric for precision cutting</li>
+      </ul>
+      <p style="margin-top: 1rem;">A major improvement from this workflow was accurate flat pattern generation, introducing precise layup processes and minimal material waste from our nesting software.</p>
+    </div>
+    <div class="media">
+      <div class="img-full">
+        <a href="images/composites/c8.png" data-lightbox="gallery-main" data-title="Stacking management interface">
+          <img src="images/composites/c8.png" alt="Stacking management" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=Stacking+Management'">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Example Project: Canopy -->
+  <h2 class="section-title">Example Project — Canopy Layup</h2>
+  <div class="section-sub">End-to-end design, splice planning, and producibility validation</div>
+
+  <div class="two-col">
+    <div class="text">
+      <p>The canopy project demonstrates the complete workflow: creating the ply schedule, generating cut shapes, and checking manufacturability with minimal material waste while ensuring structural integrity.</p>
+      <p>The layup was designed directly in the mold, including flanges and extra material for post-processing. Different colours represent distinct plies, depending on material type and fiber orientation.</p>
+    </div>
+  </div>
+
+  <div class="grid-images" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="grid-card"><a href="images/composites/c1.png" data-lightbox="canopy" data-title="Ply design on mold surface"><img src="images/composites/c1.png" alt="c1"></a><div class="grid-caption">Ply layout on mold (flanges included)</div></div>
+    <div class="grid-card"><a href="images/composites/c2.png" data-lightbox="canopy" data-title="Multi-ply stacking"><img src="images/composites/c2.png" alt="c2"></a><div class="grid-caption">Multiple plies with different orientations</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="text">
+      <p><strong>Vehicle integration check</strong> — verifying how the part fits onto the car ensures geometric compatibility before manufacturing begins.</p>
+    </div>
+  </div>
+
+  <div class="grid-images" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="grid-card"><a href="images/composites/c3.png" data-lightbox="canopy" data-title="Part assembly"><img src="images/composites/c3.png" alt="c3"></a><div class="grid-caption">Assembly positioning check</div></div>
+    <div class="grid-card"><a href="images/composites/c4.png" data-lightbox="canopy" data-title="Clearance verification"><img src="images/composites/c4.png" alt="c4"></a><div class="grid-caption">Clearance & fitment validation</div></div>
+  </div>
+
+  <!-- Splicing curves -->
+  <div class="two-col" style="flex-direction: row-reverse;">
+    <div class="text">
+      <p><strong>Splicing curves</strong> define where material will be cut or where a ply terminates, limited by fabric roll width (60 inches in this case). Every cut piece must fit within the roll width to be manufacturable.</p>
+    </div>
+  </div>
+
+  <div class="grid-images" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="grid-card"><a href="images/composites/c5.png" data-lightbox="canopy" data-title="Fabric splice definition"><img src="images/composites/c5.png" alt="c5"></a><div class="grid-caption">Fabric splice curves</div></div>
+    <div class="grid-card"><a href="images/composites/c6.png" data-lightbox="canopy" data-title="Core splice definition"><img src="images/composites/c6.png" alt="c6"></a><div class="grid-caption">Core splice curves</div></div>
+  </div>
+
+  <!-- Producibility -->
+  <div class="two-col">
+    <div class="text">
+      <p><strong>Producibility analysis</strong> checks draping feasibility for each cut piece. A completely blue result (as shown) indicates easy draping with no complex geometry issues. If red zones appear, additional splices or darts can relieve stress concentrations.</p>
+    </div>
+    <div class="media">
+      <div class="img-full"><a href="images/composites/c7.png" data-lightbox="canopy" data-title="Producibility table all OK"><img src="images/composites/c7.png" alt="c7 producibility"></a></div>
+    </div>
+  </div>
+
+  <!-- Flat pattern -->
+  <div class="two-col" style="flex-direction: row-reverse;">
+    <div class="media">
+      <div class="img-full"><a href="images/composites/c8.png" data-lightbox="canopy" data-title="Flattened cut pieces"><img src="images/composites/c8.png" alt="c8"></a></div>
+    </div>
+    <div class="text">
+      <p><strong>Flattened cut pieces</strong> — the final step generates exact 2D patterns that perfectly map onto the 3D mold surface when laid up. These pieces are then exported to nesting software and projected onto fabric for precision cutting.</p>
+    </div>
+  </div>
+
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card"><a href="images/composites/c9.jpg" data-lightbox="canopy" data-title="Manufactured canopy - side view"><img src="images/composites/c9.jpg" alt="c9 result" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=Result+1'"></a><div class="grid-caption">Finished canopy part</div></div>
+    <div class="grid-card"><a href="images/composites/c10.jpg" data-lightbox="canopy" data-title="Canopy installed"><img src="images/composites/c10.jpg" alt="c10" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=Result+2'"></a><div class="grid-caption">Canopy in mold</div></div>
+    <div class="grid-card"><a href="images/composites/c11.jpg" data-lightbox="canopy" data-title="Detail view"><img src="images/composites/c11.jpg" alt="c11" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=Result+3'"></a><div class="grid-caption">Surface finish detail</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Example Project: Nosecone -->
+  <h2 class="section-title">Example Project — Nosecone Design for Manufacturing</h2>
+  <div class="section-sub">Testing manufacturability limits and in-house fiberglass mold making</div>
+
+  <div class="two-col">
+    <div class="text">
+      <p>The nosecone project tested the minimum achievable angle for manufacturability while also exploring in-house fiberglass mold fabrication. Before splicing, the nosecone exhibited significant draping difficulties — a simple diagonal splice released all stress and made the layup feasible.</p>
+    </div>
+  </div>
+
+  <div class="grid-images" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="grid-card"><a href="images/composites/n1.png" data-lightbox="nosecone" data-title="Before splice analysis"><img src="images/composites/n1.png" alt="n1"></a><div class="grid-caption">Pre-splice: draping stress visible</div></div>
+    <div class="grid-card"><a href="images/composites/n2.png" data-lightbox="nosecone" data-title="After diagonal splice"><img src="images/composites/n2.png" alt="n2"></a><div class="grid-caption">Post-splice: stress relieved</div></div>
+  </div>
+
+  <div class="grid-images" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="grid-card"><a href="images/composites/n3.png" data-lightbox="nosecone" data-title="Fiberglass mold"><img src="images/composites/n3.jpg" alt="n3 mold" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=Mold'"></a><div class="grid-caption">In-house fiberglass mold</div></div>
+    <div class="grid-card"><a href="images/composites/n6.png" data-lightbox="nosecone" data-title="Template fitting"><img src="images/composites/n6.jpg" alt="n6 inspection" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=Inspection'"></a><div class="grid-caption">Post-cure quality check</div></div>
+    <div class="grid-card"><a href="images/composites/n4.png" data-lightbox="nosecone" data-title="Core in shape"><img src="images/composites/n5.jpg" alt="n4 core" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=Core'"></a><div class="grid-caption">Core perfectly formed</div></div>
+    <div class="grid-card"><a href="images/composites/n5.png" data-lightbox="nosecone" data-title="Final cosmetic finish"><img src="images/composites/n4.jpg" alt="n5 finish" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=Final'"></a><div class="grid-caption">Excellent cosmetic surface</div></div>
+  </div>
+  <div class="callout">
+    <strong>✅ Results speak for themselves:</strong> The core perfectly matches the intended shape, and the outer layer exhibits excellent cosmetic properties — a direct result of precise digital cutting and accurate flat patterns.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Knowledge Transfer -->
+  <h2 class="section-title">Knowledge Transfer & Technical Documentation</h2>
+  <div class="section-sub">Ensuring composite design expertise outlasts the project</div>
+  <div class="two-col">
+    <div class="text">
+      <p>In addition to developing the workflow, I authored a <strong>50+ page technical manual</strong> covering:</p>
+      <ul style="color: var(--muted); padding-left: 1.2rem;">
+        <li>CATIA Composites Design fundamentals</li>
+        <li>Ply and core design workflows</li>
+        <li>Manufacturing best practices</li>
+        <li>ACP export procedures for FEA</li>
+        <li>Troubleshooting common draping issues</li>
+      </ul>
+      <p style="margin-top: 1rem;">This documentation was used to train <strong>20+ team members</strong> and standardize composite design practices for future vehicle development, ensuring long-term sustainability of the workflow.</p>
+    </div>
+    <div class="media">
+      <div class="img-full">
+        <div style="padding: 2rem; text-align: center; background: var(--surface); border-radius: var(--radius);">
+          <span style="font-size: 3rem;">📘</span>
+          <p style="margin-top: 0.5rem; color: var(--accent2);">50+ page technical manual</p>
+          <p style="font-size: 0.7rem; color: var(--muted);">CATIA Composites Design Standard Operating Procedure</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Related Projects -->
+  <h2 class="section-title">Related Projects</h2>
+  <div class="section-sub">See FEA validation and manufacturing execution</div>
+  <div class="project-row">
+    <a href="bab.html" class="project-card">
+      <div class="project-thumb">
+        <img src="images/bab/main.png" alt="Aerobody Composite Schedule Optimization" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=BAB+Project'">
+        <div class="project-overlay"><span>Blue Sky Solar Racing</span></div>
+      </div>
+      <div class="project-info">
+        <h3>Aerobody Composite Schedule Optimization</h3>
+        <p>Using CATIA Composites Design to optimize composite scheduling and manufacturability for the GEN12 solar car, reducing weight of component by 56% compared to the previous design.</p>
+        <div class="project-tags">
+          <span class="tag">CATIA Composites Design</span>
+          <span class="tag">ANSYS</span>
+          <span class="tag">Manufacturing</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="projector.html" class="project-card">
+      <div class="project-thumb">
+        <div class="project-thumb-placeholder" style="width:100%; height:100%; background: linear-gradient(135deg, #1a1a2e, #16213e); display: flex; align-items: center; justify-content: center; font-size: 2rem;">🔮</div>
+        <div class="project-overlay"><span>Projector Stand</span></div>
+      </div>
+      <div class="project-info">
+        <h3>Projector Stand — Precision Cutting System</h3>
+        <p>Automated fabric nesting and projection system for precise composite ply cutting, eliminating manual template errors.</p>
+        <div class="project-tags">
+          <span class="tag">Nesting</span>
+          <span class="tag">Automation</span>
+          <span class="tag">Manufacturing</span>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <a href="index.html" class="btn-back">← Back to main portfolio</a>
+</div>
+
+<footer>
+  <p>© 2025 Your Name · CATIA Composites Design Workflow — Digital Composite Engineering</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<script>
+  lightbox.option({
+    'resizeDuration': 200,
+    'wrapAround': true,
+    'albumLabel': "Image %1 of %2"
+  });
+</script>
+</body>
+</html>
