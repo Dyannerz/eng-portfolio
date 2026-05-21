@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robotic Camera Arm — Fight Snapper</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #141417;
+      --card: #1a1a1f;
+      --border: #2a2a32;
+      --accent: #ec4899;
+      --accent2: #f472b6;
+      --text: #e8e8f0;
+      --muted: #7c7c94;
+      --radius: 12px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(13, 13, 15, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo a {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent2); }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+
+    .page-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 2rem 0;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 2rem 0 0.75rem 0;
+      letter-spacing: -0.01em;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      border-left: 3px solid var(--accent);
+      padding-left: 1rem;
+    }
+
+    .metrics {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 2rem 0 1rem;
+    }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.8rem;
+      text-align: center;
+      flex: 1;
+      min-width: 150px;
+    }
+    .metric-number {
+      font-size: 2.1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    .two-col {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin: 2rem 0;
+      align-items: center;
+    }
+    .two-col .text { flex: 1.2; }
+    .two-col .media { flex: 1; }
+
+    .img-full {
+      width: 100%;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .img-full img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      max-height: 500px;
+    }
+
+    .grid-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .grid-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .grid-card a {
+      display: block;
+      width: 100%;
+      text-decoration: none;
+      line-height: 0;
+    }
+    .grid-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+    .grid-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      background: #0a0a0c;
+    }
+    .grid-caption {
+      padding: 0.7rem 0.9rem 0.9rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .callout {
+      background: rgba(236, 72, 153, 0.08);
+      border-left: 4px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      margin-top: 2rem;
+    }
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      display: block;
+      margin: 1.5rem 0;
+      font-size: 0.75rem;
+    }
+    th, td {
+      padding: 0.6rem 0.4rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: rgba(236, 72, 153, 0.15);
+      color: var(--accent2);
+      font-weight: 600;
+    }
+    tr:hover { background: rgba(236, 72, 153, 0.05); }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .container { padding: 5rem 1.2rem 3rem; }
+      nav { padding: 0 1.2rem; }
+      .two-col { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo"><a href="index.html">Daniel Yan</a></span>
+  <a href="index.html" class="back-link">← Back to Portfolio</a>
+</nav>
+
+<div class="container">
+  <div class="page-label">Robotic systems & mechatronics</div>
+  <h1>Robotic Camera Arm <span>Fight Snapper</span></h1>
+  <div class="lead">
+    Affordable robotic broadcast system for cage-side MMA filming — professional cinematic movement at a fraction of the cost.
+  </div>
+
+  <div class="metrics">
+    <div class="metric-card"><div class="metric-number">$6K</div><div class="metric-label">Total BOM Cost</div></div>
+    <div class="metric-card"><div class="metric-number">$80–350K</div><div class="metric-label">Commercial System Cost</div></div>
+    <div class="metric-card"><div class="metric-number">4</div><div class="metric-label">Integrated Subsystems</div></div>
+    <div class="metric-card"><div class="metric-number">6</div><div class="metric-label">Degrees of Freedom</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Project Objective / Idea -->
+  <h2 class="section-title">Project Objective</h2>
+  <div class="section-sub">Engineering an accessible alternative to expensive broadcast robotics</div>
+  <div class="two-col">
+    <div class="text">
+      <p>This project focused on developing an affordable robotic camera system for cage-side MMA filming capable of achieving smooth cinematic movement while overcoming common broadcast obstructions such as referees, cage fencing, and fighter movement. Existing robotic broadcast systems were extremely expensive, bulky, and impractical for smaller venues, so the goal was to engineer a compact and portable alternative optimized for fast-paced combat sports environments. &lt;insert 9.png&gt;</p>
+    </div>
+    <div class="media">
+      <div class="grid-card">
+        <a href="images/camera/9.png" data-lightbox="stand-gallery" data-title="Full drawing"> 
+          <img src="images/camera/9.png" alt="Camera arm" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=Camera+Arm+drawing'">
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- Engineering Design Process -->
+  <h2 class="section-title">Engineering Design Process</h2>
+  <div class="section-sub">From requirements to concept selection</div>
+  <p>The project began with extensive research into professional robotic filming systems including cable cameras, rail cameras, and multi-axis robotic arms. Using QFD analysis, Pugh charts, and morphological charts, multiple candidate concepts were evaluated based on:</p>
+  <ul style="color: var(--muted); padding-left: 1.5rem; margin: 0.5rem 0;">
+    <li>Mechanical reach</li>
+    <li>Portability</li>
+    <li>Cost</li>
+    <li>Stability</li>
+    <li>Motion smoothness</li>
+    <li>Ease of operation</li>
+  </ul>
+  <p>The final design evolved into a semi-autonomous mobile robotic arm system featuring:</p>
+  <ul style="color: var(--muted); padding-left: 1.5rem; margin: 0.5rem 0;">
+    <li>Tank-drive mobility</li>
+    <li>Telescopic extension arm</li>
+    <li>Multi-axis wrist control</li>
+    <li>Custom planetary gearboxes</li>
+    <li>Wireless control architecture</li>
+    <li>Line-following autonomous navigation</li>
+  </ul>
+
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card">
+      <a href="images/camera/1.jpg" data-lightbox="gallery-process" data-title="Base concept sketches - Swerve, Rail, Steering options">
+        <img src="images/camera/1.jpg" alt="1.jpg">
+      </a>
+      <div class="grid-caption">Proposed Design: The Fight Snapper</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/camera/sa.png" data-lightbox="gallery-process" data-title="Base concept sketches - Swerve, Rail, Steering options">
+        <img src="images/camera/sa.png" alt="sa.png">
+      </a>
+      <div class="grid-caption">Alternative Design: Scratchmen Apoo</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/camera/exca.jpg" data-lightbox="gallery-process" data-title="Base concept sketches - Swerve, Rail, Steering options">
+        <img src="images/camera/exca.jpg" alt="exca.jpg">
+      </a>
+      <div class="grid-caption">Alternative Design: Excavator</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Mechanical System Design -->
+  <h2 class="section-title">Mechanical System Design</h2>
+  <div class="section-sub">Four integrated subsystems working in harmony</div>
+  <div class="two-col">
+    <div class="text">
+      <p>The robot was designed as four integrated subsystems:</p>
+        <ul style="color: var(--muted); padding-left: 1.5rem; margin: 0.5rem 0;">
+          <li>Drivetrain</li>
+          <li>Rotating arm joint</li>
+          <li>Telescopic arm</li>
+          <li>3-axis camera wrist</li>
+        </ul>
+        <p>The drivetrain used a compact differential tank-drive system with independent motor control for precise movement around the octagon perimeter. The original rail-based concept was later redesigned into an autonomous line-following platform using color sensors and onboard control logic to improve portability and reduce setup complexity.</p>
+        <p>The telescopic arm used nested aluminum tubing, constant-force springs, cable-driven actuation, and custom gearbox reductions to achieve smooth extension while maintaining structural stiffness and low weight.</p>
+    </div>
+    <!-- Constant force spring diagram -->
+    <div class="media">
+      <div class="grid-card">
+        <a href="images/camera/8.jpg" data-lightbox="gallery-mech" data-title="Constant force spring mechanism - Passive vs Active">
+          <img src="images/camera/8.jpg" alt="8.jpg">
+        </a>
+        <div class="grid-caption">Constant force spring (x8 in total) - Passive/Active configuration</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card">
+      <a href="images/camera/9.png" data-lightbox="gallery-mech" data-title="FIGHT SNAPPER overall system">
+        <img src="images/camera/9.png" alt="9.png">
+      </a>
+      <div class="grid-caption">Complete system concept</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/camera/a.png" data-lightbox="gallery-mech" data-title="TELESCOPE ARM 02">
+        <img src="images/camera/a.png" alt="a.png">
+      </a>
+      <div class="grid-caption">Telescope arm mechanism</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/camera/dt.png" data-lightbox="gallery-mech" data-title="DRIVETRAIN 01">
+        <img src="images/camera/dt.png" alt="dt.png">
+      </a>
+      <div class="grid-caption">Drivetrain assembly</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Results -->
+  <h2 class="section-title">Performance & Cost Analysis</h2>
+  <div class="section-sub">Professional capability at accessible price point</div>
+  <div class="two-col">
+    <div class="text">
+      <p>Commercial robotic broadcast systems such as Spidercam and Mo-Sys typically range from approximately $80,000–$350,000 USD, while the complete Fight Snapper system was designed with a total manufacturing cost of approximately $6,000 USD. This created a significantly more accessible solution for smaller productions and independent videographers while maintaining many of the core cinematic movement capabilities of high-end systems.</p>
+
+    </div>
+    <div class="grid-card" style="width: 30%; margin: 0 auto;">
+      <a href="images/camera/10.png" data-lightbox="gallery-results" data-title="System deployment 10">
+        <img src="images/camera/10.png" alt="10.png" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=10.png'">
+      </a>
+      <div class="grid-caption">Snippet of BOM overview</div>
+    </div>
+  </div>
+
+  <div class="grid-images" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="grid-card">
+      <a href="images/camera/2.png" data-lightbox="gallery-results" data-title="Prototype build 2">
+        <img src="images/camera/2.png" alt="2.png" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=2.png'">
+      </a>
+      <div class="grid-caption">Prototype assembly</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/camera/5.png" data-lightbox="gallery-results" data-title="Arm extension test 5">
+        <img src="images/camera/5.png" alt="5.png" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=5.png'">
+      </a>
+      <div class="grid-caption">Telescopic arm testing</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/camera/6.png" data-lightbox="gallery-results" data-title="Drivetrain testing 6">
+        <img src="images/camera/6.png" alt="6.png" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=6.png'">
+      </a>
+      <div class="grid-caption">Mobility & line-following</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/camera/7.png" data-lightbox="gallery-results" data-title="Camera wrist assembly 7">
+        <img src="images/camera/7.png" alt="7.png" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=7.png'">
+      </a>
+      <div class="grid-caption">Multi-axis camera wrist</div>
+    </div>
+  </div>
+
+
+
+
+  <!-- Bill of Materials Tables -->
+  <!-- Drivetrain Section -->
+  <h2 class="section-title">Drivetrain</h2>
+  <div style="overflow-x: auto; display: flex; justify-content: center;">
+    <table style="width: auto; border-collapse: collapse; background: var(--card); border-radius: var(--radius); overflow: hidden; font-size: 0.75rem; margin: 0 auto;">
+      <thead>
+        <tr style="background: rgba(236, 72, 153, 0.15);">
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Part Order</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Description</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Part Number</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Material</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Amount</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Total Price (USD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">1</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Base Rectangular Tube</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 6546K42</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6061-T6 Aluminum</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">13.8 ft</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">364.65</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">2</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Plates Sheets</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 89015K284 & 89015K276</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6061-T6 Aluminum</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">371.64 in² × 0.19 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">104.09</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">3</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Motor Support Sheet</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 9246K576</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6061 T6511 Aluminum</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">158.4 in² × ⅞ in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">196.68</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">4</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Wheel Shaft Round Tube</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 89495K855</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">304 Stainless Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">26.72 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">122.61</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">5</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Wheel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">WestCoast: WCP-0047</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6061-T6 Aluminum (Rim)</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">4</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">179.92</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">WCP 1 Motor Gearbox</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">WestCoast: WCP-1461</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">N/A</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">2</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">121.92</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">7</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Flat Sprocket</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 2299K309</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">N/A</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">4</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">97.00</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">8</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Roller Chain</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 6261K172</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">74.36 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">507.00</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">9</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Ball Bearing</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 60355K173</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">8</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">61.76</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">10</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Socket Screws</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 90128A622</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Zinc-Plated Alloy Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">108</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">88.95</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Telescope Arm Section -->
+  <h2 class="section-title">Telescope Arm</h2>
+  <div style="overflow-x: auto; display: flex; justify-content: center;">
+    <table style="width: auto; border-collapse: collapse; background: var(--card); border-radius: var(--radius); overflow: hidden; font-size: 0.75rem; margin: 0 auto;">
+      <thead>
+        <tr style="background: rgba(236, 72, 153, 0.15);">
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Part Order</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Description</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Part Number</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Material</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Amount</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Total Price (USD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">11</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Arm Tube 3" Square Tube</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 6546K65</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6061-T6 Aluminum</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">23 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">561.03</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">12</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Arm Tube 2.5" Square Tube</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 6546K43</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6061-T6 Aluminum</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">23 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">468.06</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">13</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Arm Tube 2" Square Tube</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 6546K23</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6061-T6 Aluminum</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">23 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">359.24</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">16</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">NEO Motor + MAXPlanetary System Kit</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">REV Robotics: REV-25-2109</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">N/A</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">1</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">136.00</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">17</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">0.25" Screw</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 91257A552</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Zinc-Plated Grade 8 Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">4</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">1.40</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">18</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">8-32 Screw</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 92949A194</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">18-8 Stainless Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">65</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">4.83</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">19</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Rope</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Defender: C2972-02-00100 [30]</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Dyneema SK75 fiber</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">8 ft</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">23.62</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">20</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Constant Force Springs (4lbs, 24" reach)</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 9293K117</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">304 Stainless Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">8</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">80.40</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">21</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Bevel Gears (1:1)</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">N/A (Custom Generated) (Reference part 2515N18)</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">304 Stainless Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">2</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">~96.16</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">22</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Plastic Pulley</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 8701K46</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">UHMW</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">1 ft</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">5.23</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">23</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Bearings R4-2Z</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 57155K377</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">440C Stainless Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">2</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">9.66</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">24</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Steel Shaft</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 3732N13</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Low-Carbon Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">1 ft</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">2.40</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">25</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Hex Shaft</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">WestCoast: WCP-0912</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">7075-T6 Aluminum</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">3.6 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">1.50</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">26</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Motor Bracket</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 8982K522</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6061 Aluminum</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">3 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">2.99</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Arm Support Frame Section -->
+  <h2 class="section-title">Arm Support Frame</h2>
+  <div style="overflow-x: auto; display: flex; justify-content: center;">
+    <table style="width: auto; border-collapse: collapse; background: var(--card); border-radius: var(--radius); overflow: hidden; font-size: 0.75rem; margin: 0 auto;">
+      <thead>
+        <tr style="background: rgba(236, 72, 153, 0.15);">
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Part Order</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Description</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Part Number</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Material</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Amount</th>
+          <th style="padding: 0.75rem 0.5rem; text-align: left; color: var(--accent2);">Total Price (USD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">27</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Tube Insert</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 8975K991</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6061-T6 Aluminum</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">8 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">34.56</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">28</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Vertical Rectangular Tube</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 6546K42</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6061-T6 Aluminum</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">9 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">36.16</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">29</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">8-32 Screw</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 92949A194</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">18-8 Stainless Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">16</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">1.19</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">30</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">10-32 Screw</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 92949A271</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">18-8 Stainless Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">6</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">1.03</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">31</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">0.375" Socket Screw</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 91251A588</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Black-Oxide Alloy Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">10</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">17.70</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">32</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">BLDC Motor[29]</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Teknic: M-3432P-LN-08D</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">N/A</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">1</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">404.00</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">33</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Arm Shaft Bushing</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 6338K597</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">841 Bearing Bronze</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">4</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">57.20</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">34</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Arm Shaft</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">McMaster: 7767T78</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">Low-Carbon Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">13.50 in</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">108.02</td></tr>
+        <tr><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">35</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">30T Sprocket</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">WestCoast: WCP-0982</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">304 Stainless Steel</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">1</td><td style="padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border);">12.99</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <a href="index.html" class="btn-back">← Back to main portfolio</a>
+</div>
+
+<footer>
+  <p>© 2026 Daniel Yan · Robotic Camera Arm — Fight Snapper · Mechatronics & Broadcast Automation</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<script>
+  lightbox.option({
+    'resizeDuration': 200,
+    'wrapAround': true,
+    'albumLabel': "Image %1 of %2"
+  });
+</script>
+</body>
+</html>

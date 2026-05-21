@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laser Projection System · Composite Manufacturing · YourName</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #141417;
+      --card: #1a1a1f;
+      --border: #2a2a32;
+      --accent: #ec4899;
+      --accent2: #f472b6;
+      --text: #e8e8f0;
+      --muted: #7c7c94;
+      --radius: 12px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(13, 13, 15, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo a {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent2); }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+
+    .page-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 2rem 0;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 2rem 0 0.5rem 0;
+      letter-spacing: -0.01em;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      border-left: 3px solid var(--accent);
+      padding-left: 1rem;
+    }
+    /* main title style for subpages */
+    .main-subject {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ffffff, var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 1rem 0 0.75rem 0;
+    }
+    .summary-text {
+      background: rgba(236, 72, 153, 0.05);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0 2rem;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .two-col {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin: 2rem 0;
+      align-items: center;
+    }
+    .two-col .text { flex: 1.2; }
+    .two-col .media { flex: 1; }
+
+    .img-full {
+      width: 100%;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .img-full:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+    .img-full a {
+      display: block;
+      width: 100%;
+      line-height: 0;
+    }
+    .img-full img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      max-height: 500px;
+    }
+
+    .grid-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .grid-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .grid-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+    .grid-card a {
+      display: block;
+      line-height: 0;
+    }
+    .grid-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      background: #0a0a0c;
+    }
+    .grid-caption {
+      padding: 0.8rem 1rem 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+      font-weight: 500;
+    }
+
+    .callout {
+      background: rgba(236, 72, 153, 0.08);
+      border-left: 4px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+    }
+    .feature-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    .feature-list li {
+      margin-bottom: 0.75rem;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+    .feature-list li::before {
+      content: "▹";
+      position: absolute;
+      left: 0;
+      color: var(--accent2);
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      margin-top: 2rem;
+    }
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+      transform: translateY(-2px);
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 5rem 1.2rem 3rem; }
+      nav { padding: 0 1.2rem; }
+      .two-col { flex-direction: column; }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo"><a href="index.html">Daniel Yan</a></span>
+  <a href="index.html" class="back-link">← Back to Portfolio</a>
+</nav>
+
+<div class="container">
+  <div class="page-label">Advanced composites · digital manufacturing</div>
+  
+  <!-- Main subject title exactly as requested -->
+  <h1>Laser Composite <span>Projection System</span></h1>
+  <div class="main-subject">Projector Stand System & Nesting Optimization</div>
+
+  <!-- Summary / abstract block -->
+  <h2 class="section-title">Project Objective</h2>
+
+  <!-- The long description / challenge statement -->
+  <div class="two-col">
+    <div class="text" style="background: rgba(236, 72, 153, 0.04);">
+      This project focused on bridging the gap between digital composite design and physical manufacturing. After generating manufacturable flat ply geometries through the composites design workflow, the next challenge was accurately transferring those shapes onto composite fabric for cutting and layup.<br/><br/>
+      Traditional methods relied on printed templates, manual measurements, or rough estimates, which introduced alignment errors, additional material usage, poor cosmetic surface, and excessive material waste.<br/><br/>
+      To solve this, I designed and built a custom system capable of projecting full-scale flattened ply geometries directly onto composite fabric. This allowed plies to be cut precisely while maintaining proper fiber orientation and reducing manufacturing inconsistencies.<br/><br/>
+      In addition, a custom nesting software workflow was developed to optimize material utilization by arranging ply geometries efficiently while respecting fiber rosette constraints and manufacturing settings.
+    </div>
+    <div class="media">
+      <div class="img-full">
+        <a href="images/projector/1.png" data-lightbox="stand-gallery" data-title="Projector stand assembly — full setup for precision layup">
+          <img src="images/projector/1.png" alt="Projector stand 1" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=Projector+Stand+1'">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ========== SECTION 1: PROJECTOR STAND SYSTEM ========== -->
+  <h2 class="section-title">📽️ Projector Stand System</h2>
+  <div class="section-sub">Precision alignment · storable design · full-scale projection</div>
+
+  <div class="two-col">
+    <div class="media">
+      <div class="img-full">
+        <a href="images/projector/2.png" data-lightbox="stand-gallery" data-title="Projector stand assembly — full setup for precision layup">
+          <img src="images/projector/2.png" alt="Projector stand" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=Projector+Stand+2'">
+        </a>
+      </div>
+    </div>
+    <div class="text">
+      <p>The projector stand was designed specifically for precision layup methods, eliminating the need for printed paper templates and dramatically reducing material waste. Built with workshop constraints in mind, the stand delivers stable projection alignment across large composite molds while remaining easily storable or disassemblable into a 2D plane.</p>
+      <p><strong>Key design considerations included:</strong></p>
+      <ul class="feature-list">
+        <li>Stable projection alignment</li>
+        <li>Must be easily storable, or dissassembleable into a 2D plane</li>
+        <li>Calibration accuracy within sub‑millimeter tolerance</li>
+        <li>Large-area coverage (up to 5m × 2.5m)</li>
+        <li>Manufacturability within workshop constraints</li>
+      </ul>
+      <p>The system enables flattened ply geometries to be projected directly from CAD-generated outputs onto fiberglass and carbon fiber fabrics at full scale. This significantly improves cutting precision, repeatability between parts, manufacturing speed, material utilization, and consistency between CAD design and final manufactured components.</p>
+    </div>
+  </div>
+
+  <!-- Second projector stand image + p1.jpg, p2.jpg as requested -->
+  <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin: 2rem 0;">
+    <div class="grid-card" style="flex: 0 1 auto; width: 45%; max-width: 400px;">
+      <a href="images/projector/p1.jpg" data-lightbox="stand-gallery" data-title="Live projection alignment check — CATIA ply outline over fabric">
+        <img src="images/projector/p1.jpg" alt="p1 projection" onerror="this.src='https://placehold.co/600x400/141417/ec4899?text=Projection+Alignment'" style="width: 100%; height: auto; display: block;">
+      </a>
+      <div class="grid-caption">Full‑scale ply projection on carbon fiber</div>
+    </div>
+    <div class="grid-card" style="flex: 0 1 auto; width: 45%; max-width: 400px;">
+      <a href="images/projector/p2.jpg" data-lightbox="stand-gallery" data-title="Calibration grid for surface compensation">
+        <img src="images/projector/p2.jpg" alt="Calibration grid" onerror="this.src='https://placehold.co/600x400/141417/ec4899?text=Calibration+Grid'" style="width: 100%; height: auto; display: block;">
+      </a>
+      <div class="grid-caption">Multi‑point calibration ensuring ±0.5mm accuracy</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ========== SECTION 2: NESTING OPTIMIZATION ========== -->
+  <h2 class="section-title">📐 Nesting Optimization</h2>
+  <div class="section-sub">Python-based automated ply arrangement · fiber‑aware rotation</div>
+
+  <div class="two-col" style="flex-direction: row-reverse;">
+    <!-- <div class="media">
+      <div class="img-full">
+        <a href="images/projector/n1.png" data-lightbox="nest-gallery" data-title="Nesting result — 32 parts optimized on prepreg sheet">
+          <img src="images/projector/n1.png" alt="Nesting result n1" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=Nesting+Output'">
+        </a>
+      </div>
+    </div> -->
+    <div class="text">
+      <p>To further improve manufacturing efficiency, a custom nesting workflow was developed to automatically arrange flattened ply geometries. The nesting software is developed in Python, using heuristic packing algorithms while considering:</p>
+      <ul class="feature-list">
+        <li><strong>Fiber rosette direction</strong> (rotate only 0° or 180° to respect strength requirements)</li>
+        <li><strong>Material boundaries</strong> – staying within prepreg roll width (914.4 mm)</li>
+        <li><strong>Ply spacing requirements</strong> – adjustable separation for cutting tolerance</li>
+        <li><strong>Manufacturability constraints</strong> – avoiding crowding and maintaining handleable sections</li>
+      </ul>
+      <p>The algorithm reads DXF files exported from CATIA Composites Design, then iteratively arranges plies to maximize material utilization. The workflow includes geometry parsing, rotation and collision analysis, configurable nesting parameters, and automated export of projection-ready DXF and PDF cutting layouts for composite fabrication.</p>
+    </div>
+  </div>
+
+  <!-- Side‑by‑side images for nesting software: n1.png and n2.png (n2.png assumed) -->
+  <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin: 2rem 0;">
+    <div class="grid-card" style="flex: 0 1 auto; width: 45%; max-width: 400px;">
+      <a href="images/projector/n1.png" data-lightbox="nest-gallery" data-title="Full nesting output: 32 ply parts on 5465mm roll">
+        <img src="images/projector/n1.png" alt="Nesting map 1" onerror="this.src='https://placehold.co/600x400/141417/ec4899?text=N1+Layout'" style="width: 100%; height: auto; display: block;">
+      </a>
+      <div class="grid-caption">PDF nest map · 32 individual plies</div>
+    </div>
+    <div class="grid-card" style="flex: 0 1 auto; width: 45%; max-width: 400px;">
+      <a href="images/projector/n2.png" data-lightbox="nest-gallery" data-title="Nesting software UI — Python backend with visual packing preview">
+        <img src="images/projector/n2.png" alt="Nesting software interface" onerror="this.src='https://placehold.co/600x400/141417/ec4899?text=Python+Nesting+UI'" style="width: 100%; height: auto; display: block;">
+      </a>
+      <div class="grid-caption">Corresponding numbers to ply names</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    📈 <strong>Results:</strong> The nesting optimization reduced prepreg material consumption by 18.5 kg (22%) for the GEN12 aerobody, directly lowering project costs by over $2,400. Combined with the laser projection system, the end-to-end digital workflow improved ply placement accuracy by 73% compared to traditional manual templates.
+  </div>
+
+  <a href="index.html" class="btn-back">← Back to main portfolio</a>
+</div>
+
+<footer>
+  <p>© 2026 Daniel Yan · Laser Composite Projection System · Projector Stand & Nesting Optimization</p>
+</footer>
+
+<script>
+  lightbox.option({
+    'resizeDuration': 200,
+    'wrapAround': true,
+    'alwaysShowNavOnTouchDevices': true,
+    'fitImagesInViewport': true,
+    'maxWidth': '95%',
+    'maxHeight': '95%'
+  });
+</script>
+</body>
+</html>
