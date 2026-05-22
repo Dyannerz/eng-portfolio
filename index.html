@@ -408,8 +408,11 @@
       height: auto;
       object-fit: contain;
       display: block;
+      background: transparent;
+      /* Add these for iOS Safari */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
-
     .exp-text { flex: 1; }
 
     .exp-header {
@@ -745,7 +748,7 @@
     </div>
     <div class="exp-item">
       <div class="exp-img">
-        <img src="images/utfr.png" alt="UT Formula Racing">
+        <img src="images/utfr.png" alt="UT Formula Racing" style="border: 2px solid red; min-height: 50px;">
       </div>
       <div class="exp-text">
         <div class="exp-header">
