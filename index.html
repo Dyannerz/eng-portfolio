@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portfolio — Your Name</title>
-  <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap)" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Daniel Yan — Engineering Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -13,8 +13,8 @@
       --surface: #141417;
       --card:    #1a1a1f;
       --border:  #2a2a32;
-      --accent:  #ec4899; /* Vibrant Pink (Tailwind Pink 500) */
-      --accent2: #f472b6; /* Soft Pink (Tailwind Pink 400) */
+      --accent:  #ec4899;
+      --accent2: #f472b6;
       --text:    #e8e8f0;
       --muted:   #7c7c94;
       --radius:  12px;
@@ -30,25 +30,31 @@
       overflow-x: hidden;
     }
 
-    /* ── Scrollbar ── */
+    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-    /* ── Nav ── */
+    /* ===== MOBILE-FIRST NAVIGATION ===== */
     nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2.5rem;
-      height: 64px;
-      background: rgba(13,13,15,0.8);
+      background: rgba(13, 13, 15, 0.95);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      padding: 0 2rem;
+    }
+
 
     .nav-logo {
       font-weight: 700;
@@ -56,13 +62,36 @@
       letter-spacing: -0.02em;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+    }
+
+    /* Mobile menu button */
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      z-index: 102;
+    }
+
+    .menu-btn span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      margin: 5px 0;
+      transition: 0.3s;
+      border-radius: 2px;
     }
 
     .nav-links {
       display: flex;
       gap: 2rem;
       list-style: none;
+      transition: 0.3s ease;
     }
 
     .nav-links a {
@@ -71,115 +100,134 @@
       font-size: 0.875rem;
       font-weight: 500;
       transition: color 0.2s;
+      white-space: nowrap;
     }
 
     .nav-links a:hover { color: var(--text); }
 
-    /* ── Hero ── */
+    /* Mobile styles */
+    @media (max-width: 768px) {
+      .menu-btn {
+        display: block;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 64px;
+        left: -100%;
+        width: 70%;
+        max-width: 280px;
+        height: calc(100vh - 64px);
+        background: rgba(13, 13, 15, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        gap: 0;
+        padding: 1.5rem 0;
+        border-right: 1px solid var(--border);
+        transition: left 0.3s ease;
+        z-index: 101;
+      }
+
+      .nav-links.active {
+        left: 0;
+      }
+
+      .nav-links li {
+        width: 100%;
+      }
+
+      .nav-links a {
+        display: block;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        white-space: normal;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+
+      .nav-links a:hover {
+        background: rgba(236, 72, 153, 0.1);
+      }
+
+      /* Hamburger animation */
+      .menu-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+      .menu-btn.active span:nth-child(2) {
+        opacity: 0;
+      }
+      .menu-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+      }
+    }
+
+    /* Hero Slideshow */
     .hero {
       min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .slide.active { opacity: 1; }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(13,13,15,0.55);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 6rem 2rem 4rem;
-      position: relative;
-      overflow: hidden;
+      padding: 2rem;
     }
 
-    /* ───────────────── HERO SLIDESHOW ───────────────── */
-
-.hero {
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
-
-/* slides */
-.slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 1.2s ease;
-}
-
-.slide.active {
-  opacity: 1;
-}
-
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* dark overlay */
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(13,13,15,0.55);
-  z-index: 1;
-}
-
-/* content */
-.hero-content {
-  position: relative;
-  z-index: 2;
-  height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  text-align: center;
-  padding: 2rem;
-}
-
-/* dots */
-.slider-dots {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-
-  display: flex;
-  gap: 0.7rem;
-
-  z-index: 3;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-
-  background: rgba(255,255,255,0.35);
-
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.dot.active {
-  background: white;
-  transform: scale(1.2);
-}
-
-    .hero::before {
-      content: '';
+    .slider-dots {
       position: absolute;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(236, 72, 153, 0.12) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.7rem;
+      z-index: 3;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: white;
+      transform: scale(1.2);
     }
 
     .hero-tag {
       display: inline-block;
-      background: rgba(108,99,255,0.15);
-      border: 1px solid rgba(108,99,255,0.3);
+      background: rgba(236,72,153,0.15);
+      border: 1px solid rgba(236,72,153,0.3);
       color: var(--accent2);
       font-size: 0.75rem;
       font-weight: 600;
@@ -201,6 +249,7 @@
     .hero h1 span {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
@@ -238,9 +287,9 @@
     }
 
     .btn-primary:hover {
-      background: #5b54d6;
+      background: #c43d82;
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(108,99,255,0.35);
+      box-shadow: 0 8px 24px rgba(236,72,153,0.35);
     }
 
     .btn-ghost {
@@ -255,9 +304,9 @@
       transform: translateY(-2px);
     }
 
-    /* ── Sections ── */
+    /* Sections */
     section {
-      padding: 5rem 2rem;
+      padding: 4rem 1.5rem;
       max-width: 1000px;
       margin: 0 auto;
     }
@@ -272,7 +321,7 @@
     }
 
     .section-title {
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
       font-weight: 700;
       letter-spacing: -0.02em;
       margin-bottom: 0.75rem;
@@ -282,10 +331,10 @@
       color: var(--muted);
       max-width: 500px;
       font-size: 0.95rem;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
     }
 
-    /* ── About ── */
+    /* About - vertical on mobile */
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -314,12 +363,23 @@
       font-weight: 700;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .stat-card .label { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
 
-    /* ── Experience ── */
+    @media (max-width: 700px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .about-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Experience - mobile optimized */
     .exp-grid {
       display: flex;
       flex-direction: column;
@@ -334,14 +394,10 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .exp-item:last-child {
-      border-bottom: none;
-    }
+    .exp-item:last-child { border-bottom: none; }
 
-    /* Logo */
     .exp-img {
-      width: 90px;     /* control size */
-      height: auto;    /* DON'T force square */
+      width: 70px;
       flex-shrink: 0;
       display: flex;
       align-items: center;
@@ -349,16 +405,12 @@
 
     .exp-img img {
       width: 100%;
-      height: auto;          /* keeps original proportions */
-      object-fit: contain;   /* safe fallback */
+      height: auto;
+      object-fit: contain;
       display: block;
-      background: transparent; /* no background */
     }
 
-    /* Text */
-    .exp-text {
-      flex: 1;
-    }
+    .exp-text { flex: 1; }
 
     .exp-header {
       display: flex;
@@ -368,29 +420,29 @@
       flex-wrap: wrap;
     }
 
-    .role {
-      font-weight: 600;
-      font-size: 0.95rem;
+    .role { font-weight: 600; font-size: 0.95rem; }
+    .period { font-size: 0.75rem; color: var(--muted); }
+    .company { color: var(--accent2); font-size: 0.85rem; margin: 0.15rem 0 0.5rem; }
+    .exp-text p { color: var(--muted); font-size: 0.85rem; line-height: 1.7; }
+
+    /* Mobile: stack experience items vertically with smaller logo */
+    @media (max-width: 600px) {
+      .exp-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+      .exp-img {
+        width: 55px;
+      }
+      .exp-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+      }
     }
 
-    .period {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .company {
-      color: var(--accent2);
-      font-size: 0.85rem;
-      margin: 0.15rem 0 0.5rem;
-    }
-
-    .exp-text p {
-      color: var(--muted);
-      font-size: 0.85rem;
-      line-height: 1.7;
-    }
-
-    /* ── Projects ── */
+    /* Projects Grid */
     .projects-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -412,48 +464,7 @@
     .project-card:hover {
       border-color: var(--accent);
       transform: translateY(-6px);
-      box-shadow: 0 16px 40px rgba(108,99,255,0.2);
-    }
-
-    .exp-img {
-      width: 90px;
-      height: 90px;
-      border-radius: 10px;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .exp-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .exp-content {
-      flex: 1;
-    }
-
-    .exp-content .role {
-      font-weight: 600;
-      font-size: 1rem;
-    }
-
-    .exp-content .company {
-      color: var(--accent2);
-      font-size: 0.85rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .exp-content .period {
-      color: var(--muted);
-      font-size: 0.75rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .exp-content p {
-      color: var(--muted);
-      font-size: 0.85rem;
-      line-height: 1.6;
+      box-shadow: 0 16px 40px rgba(236,72,153,0.2);
     }
 
     .project-thumb {
@@ -465,14 +476,14 @@
     }
 
     .project-thumb img {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       transition: transform 0.4s ease;
     }
 
     .project-card:hover .project-thumb img { transform: scale(1.06); }
 
-    /* Placeholder when no image */
     .project-thumb-placeholder {
       width: 100%;
       height: 100%;
@@ -495,6 +506,7 @@
       justify-content: center;
     }
 
+    .project-card:hover .project-overlay { opacity: 1; }
     .project-overlay span {
       color: #fff;
       font-size: 0.9rem;
@@ -503,30 +515,11 @@
       transform: translateY(10px);
       transition: transform 0.3s ease;
     }
+    .project-card:hover .project-overlay span { transform: translateY(0); }
 
-    .project-card:hover .project-overlay {
-      opacity: 1;
-    }
-
-    .project-card:hover .project-overlay span {
-      transform: translateY(0);
-    }
-
-    .project-info {
-      padding: 1rem 1.1rem 1.2rem;
-    }
-
-    .project-info h3 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
-
-    .project-info p {
-      font-size: 0.78rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
+    .project-info { padding: 1rem 1.1rem 1.2rem; }
+    .project-info h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .project-info p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
 
     .project-tags {
       display: flex;
@@ -540,21 +533,33 @@
       font-weight: 600;
       padding: 0.2rem 0.6rem;
       border-radius: 100px;
-      background: rgba(108,99,255,0.12);
+      background: rgba(236,72,153,0.12);
       color: var(--accent2);
-      border: 1px solid rgba(108,99,255,0.2);
+      border: 1px solid rgba(236,72,153,0.2);
     }
 
-    /* ── Resume ── */
-    .resume-section {
-      text-align: center;
+    @media (max-width: 700px) {
+      .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
     }
 
+    @media (max-width: 480px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+      section {
+        padding: 3rem 1rem;
+      }
+    }
+
+    /* Resume Card */
     .resume-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 3rem 2rem;
+      padding: 2rem 1.5rem;
       display: inline-flex;
       flex-direction: column;
       align-items: center;
@@ -564,9 +569,10 @@
     }
 
     .resume-icon {
-      width: 56px; height: 56px;
-      background: rgba(108,99,255,0.15);
-      border: 1px solid rgba(108,99,255,0.3);
+      width: 56px;
+      height: 56px;
+      background: rgba(236,72,153,0.15);
+      border: 1px solid rgba(236,72,153,0.3);
       border-radius: 12px;
       display: flex;
       align-items: center;
@@ -574,7 +580,7 @@
       font-size: 1.5rem;
     }
 
-    /* ── Contact ── */
+    /* Contact */
     .contact-grid {
       display: flex;
       gap: 1.25rem;
@@ -590,33 +596,40 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
+      padding: 1rem 1.25rem;
       text-decoration: none;
       color: var(--text);
       font-weight: 500;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       transition: all 0.25s;
     }
 
     .contact-link:hover {
       border-color: var(--accent);
       transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(108,99,255,0.15);
       color: var(--accent2);
     }
 
     .contact-icon {
-      width: 38px; height: 38px;
-      background: rgba(108,99,255,0.12);
+      width: 38px;
+      height: 38px;
+      background: rgba(236,72,153,0.12);
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
       flex-shrink: 0;
     }
 
-    /* ── Footer ── */
+    @media (max-width: 550px) {
+      .contact-grid {
+        flex-direction: column;
+      }
+      .contact-link {
+        width: 100%;
+      }
+    }
+
     footer {
       text-align: center;
       padding: 2rem;
@@ -625,7 +638,6 @@
       border-top: 1px solid var(--border);
     }
 
-    /* ── Divider ── */
     .divider {
       width: 100%;
       height: 1px;
@@ -634,118 +646,70 @@
       margin: 0 auto;
     }
 
-    /* ── Fade-in animation ── */
+    /* Fade-in */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
-    .fade-up {
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards;
-    }
-
+    .fade-up { opacity: 0; animation: fadeUp 0.6s ease forwards; }
     .delay-1 { animation-delay: 0.1s; }
     .delay-2 { animation-delay: 0.2s; }
     .delay-3 { animation-delay: 0.3s; }
     .delay-4 { animation-delay: 0.4s; }
-
-    /* ── Responsive ── */
-    @media (max-width: 700px) {
-      .about-grid,
-      .projects-grid { grid-template-columns: repeat(2, 1fr); }
-      nav { padding: 0 1.25rem; }
-      .nav-links { gap: 1.25rem; }
-    }
-
-    @media (max-width: 600px) {
-      .exp-card {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .exp-img {
-        width: 100%;
-        height: 160px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .projects-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 600px) {
-      .exp-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
   </style>
 </head>
 <body>
 
-<!-- ── Navigation ── -->
 <nav>
-  <span class="nav-logo">Daniel Yan</span>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+  <div class="nav-container">
+    <span class="nav-logo">Daniel Yan</span>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
 </nav>
 
-<!-- ── Hero ── -->
-<!-- ── Hero ── -->
+<!-- Hero -->
 <div class="hero">
-
-  <!-- Slides -->
   <div class="slide active">
     <img src="images/slides/1.png" alt="">
   </div>
-
   <div class="slide">
     <img src="images/slides/2.png" alt="">
   </div>
-
-  <!-- Dark Overlay -->
   <div class="hero-overlay"></div>
-
-  <!-- Content -->
   <div class="hero-content">
     <div class="hero-tag">Engineering Portfolio</div>
-
-    <h1 class="fade-up delay-1">
-      Hi, I'm <span>Daniel</span>
-    </h1>
-
-    <p class="fade-up delay-2">
-      Mechanical / Software / Electrical Engineer building things that matter.
-    </p>
-
+    <h1 class="fade-up delay-1">Hi, I'm <span>Daniel</span></h1>
+    <p class="fade-up delay-2">Mechanical / Software / Electrical Engineer building things that matter.</p>
     <div class="hero-cta fade-up delay-3">
       <a href="#projects" class="btn btn-primary">View Projects</a>
       <a href="#contact" class="btn btn-ghost">Get in Touch</a>
     </div>
   </div>
-
-  <!-- Dots ADD FOR EVERY IMAGE --> 
   <div class="slider-dots">
     <span class="dot active"></span>
     <span class="dot"></span>
   </div>
-
 </div>
 
 <div class="divider"></div>
 
-<!-- ── About ── -->
+<!-- About -->
 <section id="about">
   <p class="section-label">About</p>
   <h2 class="section-title">Who I am</h2>
   <div class="about-grid">
     <div class="about-text">
-      <p>I'm an engineering student / professional passionate about solving complex problems through design, analysis, and prototyping. I thrive at the intersection of theory and hands-on building.</p>
+      <p>I'm an engineering student passionate about solving complex problems through design, analysis, and prototyping. I thrive at the intersection of theory and hands-on building.</p>
       <p>When I'm not in the lab, I'm exploring new frameworks, contributing to open-source hardware projects, or hiking somewhere with no cell service.</p>
       <a href="#contact" class="btn btn-ghost" style="margin-top:0.5rem; display:inline-flex;">Say hello →</a>
     </div>
@@ -760,72 +724,70 @@
 
 <div class="divider"></div>
 
-<!-- ── Experience ── -->
+<!-- Experience -->
 <section id="experience">
   <p class="section-label">Career</p>
   <h2 class="section-title">Experience</h2>
   <p class="section-sub">Relevant experiences and teams I've contributed to.</p>
   <div class="exp-grid">
-
-    <!-- Blue Sky Solar Racing -->
     <div class="exp-item">
       <div class="exp-img">
-        <img src="images/bluesky.png" alt="Company Logo">
+        <img src="images/bluesky.png" alt="Blue Sky Solar Racing">
       </div>
-
       <div class="exp-text">
         <div class="exp-header">
           <span class="role">Structural and Fabrication Lead</span>
           <span class="period">February 2025 – Current</span>
         </div>
         <div class="company">Blue Sky Solar Racing</div>
-        <p>
-          Lead a team of over 70 members in the design and manufacturing of structural components of a solar racing car for the American Solar Challenge. Components include chassis, roll cage, view window, stiffeners, battery box, and more.
-        </p>
+        <p>Lead a team of over 70 members in the design and manufacturing of structural components of a solar racing car for the American Solar Challenge. Components include chassis, roll cage, view window, stiffeners, battery box, and more.</p>
       </div>
     </div>
-    
-    <!-- UTFR -->
     <div class="exp-item">
       <div class="exp-img">
-        <img src="images/utfr.png" alt="Company Logo">
+        <img src="images/utfr.png" alt="UT Formula Racing">
       </div>
-
       <div class="exp-text">
         <div class="exp-header">
           <span class="role">Business - Photographer</span>
           <span class="period">January 2026 – Current</span>
         </div>
         <div class="company">University of Toronto Formula Racing</div>
-        <p>
-          Managed business operations and documented team activities through photography and videography for promotional purposes.
-        </p>
+        <p>Managed business operations and documented team activities through photography and videography for promotional purposes.</p>
       </div>
     </div>
-
+    <div class="exp-item">
+      <div class="exp-img">
+        <img src="images/mcml.png" alt="Multifunctional Composite Manufacturing Lab">
+      </div>
+      <div class="exp-text">
+        <div class="exp-header">
+          <span class="role">Research Assistant</span>
+          <span class="period">May 2026 – Current</span>
+        </div>
+        <div class="company">Multifunctional Composite Manufacturing Lab</div>
+        <p>Conducted research and testing on composite materials for the use in lightweight exoskeleton applications.</p>
+      </div>
+    </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- ── Projects ── -->
+<!-- Projects -->
 <section id="projects">
   <p class="section-label">Work</p>
   <h2 class="section-title">Projects</h2>
   <p class="section-sub">Click any project to learn more.</p>
   <div class="projects-grid">
-
-
     <a href="bab.html" class="project-card">
       <div class="project-thumb">
-        <!-- Replace src with your image: <img src="images/project1.jpg" alt="Project 1"/> -->
         <img src="images/bab/main.png" alt="Aerobody Composite Schedule Optimization">
         <div class="project-overlay"><span>Blue Sky Solar Racing</span></div>
       </div>
       <div class="project-info">
         <h3>Aerobody Composite Schedule Optimization</h3>
-        <p>Using CATIA Composites Design to optimize composite scheduling and manufacturability for the GEN12 solar car, 
-          reducing weight of component by 56% compaared to the previous design.</p>
+        <p>Using CATIA Composites Design to optimize composite scheduling and manufacturability for the GEN12 solar car, reducing weight of component by 56% compared to the previous design.</p>
         <div class="project-tags">
           <span class="tag">CATIA Composites Design</span>
           <span class="tag">ANSYS</span>
@@ -892,57 +854,57 @@
         <h3>Robotic Camera Arm</h3>
         <p>Designed and engineered a low-cost semi-autonomous robotic camera arm for MMA cage-side filming, integrating custom drivetrain, telescopic arm, gearbox, and motion systems to achieve smooth multi-axis cinematic camera movement in constrained live-event environments.</p>
         <div class="project-tags">
-          <span class="tag">ROS</span>
-          <span class="tag">Python</span>
-          <span class="tag">MoveIt</span>
+          <span class="tag">Solidworks</span>
+          <span class="tag">Kinematics</span>
         </div>
       </div>
     </a>
 
-    <a href="project6.html" class="project-card">
+    <a href="birdfeeder.html" class="project-card">
       <div class="project-thumb">
-        <div class="project-thumb-placeholder">📡</div>
-        <div class="project-overlay"><span>View Project →</span></div>
+        <img src="images/birdfeeder/main.png" alt="Shuttlecock Feeder">
+        <div class="project-overlay"><span>Personal Project</span></div>
       </div>
       <div class="project-info">
-        <h3>LoRa Sensor Network</h3>
-        <p>Distributed wireless sensor mesh for environmental monitoring across a 5km campus.</p>
+        <h3>Badminton Shuttlecock Feeder</h3>
+        <p>Designed and developed a portable Bluetooth-controlled badminton shuttlecock launcher by integrating mechanical system design, brushless motor control, embedded ESP32 programming, wireless communication, and iterative mechatronics prototyping to simulate realistic badminton training shots.</p>
         <div class="project-tags">
-          <span class="tag">LoRa</span>
-          <span class="tag">Embedded C</span>
-          <span class="tag">MQTT</span>
+          <span class="tag">Solidworks</span>
+          <span class="tag">C++</span>
+          <span class="tag">ESP32</span>
+          <span class="tag">Mechatronics</span>
+          <span class="tag">Embedded</span>
         </div>
       </div>
     </a>
-
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- ── Resume ── -->
+<!-- Resume -->
 <section id="resume" style="text-align:center;">
   <p class="section-label">Resume</p>
   <h2 class="section-title">View My CV!</h2>
   <p class="section-sub" style="margin:0 auto 2rem;">A full overview of my education, skills, and experience.</p>
   <div class="resume-card" style="margin:0 auto;">
     <div class="resume-icon">📄</div>
-    <p style="color:var(--muted); font-size:0.9rem;">YourName_Resume_2025.pdf · 1 page</p>
+    <p style="color:var(--muted); font-size:0.9rem;">DanielYan_Resume_2026.pdf · 1 page</p>
     <a href="resume.pdf" download class="btn btn-primary">Download Resume ↓</a>
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- ── Contact ── -->
+<!-- Contact -->
 <section id="contact">
   <p class="section-label">Contact</p>
   <h2 class="section-title">Let's connect</h2>
   <p class="section-sub">Open to internships, full-time roles, and interesting projects.</p>
   <div class="contact-grid">
-    <a href="danielyanca9@email.com" class="contact-link">
+    <a href="mailto:danielyanca9@gmail.com" class="contact-link">
       <div class="contact-icon">✉️</div>
-      danielyanca9@email.com
+      danielyanca9@gmail.com
     </a>
     <a href="https://www.linkedin.com/in/danielyan9/" target="_blank" class="contact-link">
       <div class="contact-icon">
@@ -955,55 +917,50 @@
   </div>
 </section>
 
-<!-- ── Footer ── -->
 <footer>
   <p>© 2026 Daniel Yan · My Engineering Portfolio</p>
 </footer>
 
-
 <script>
-const slides = document.querySelectorAll(".slide");
-const dots = document.querySelectorAll(".dot");
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const navLinks = document.getElementById('navLinks');
 
-let currentSlide = 0;
-
-function showSlide(index) {
-
-  slides.forEach(slide => {
-    slide.classList.remove("active");
+  menuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    menuBtn.classList.toggle('active');
   });
 
-  dots.forEach(dot => {
-    dot.classList.remove("active");
+  // Close menu when clicking a link
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('active');
+      menuBtn.classList.remove('active');
+    });
   });
 
-  slides[index].classList.add("active");
-  dots[index].classList.add("active");
+  // Hero slideshow
+  const slides = document.querySelectorAll(".slide");
+  const dots = document.querySelectorAll(".dot");
+  let currentSlide = 0;
 
-  currentSlide = index;
-}
-
-/* auto slideshow */
-setInterval(() => {
-
-  let nextSlide = currentSlide + 1;
-
-  if(nextSlide >= slides.length){
-    nextSlide = 0;
+  function showSlide(index) {
+    slides.forEach(slide => slide.classList.remove("active"));
+    dots.forEach(dot => dot.classList.remove("active"));
+    slides[index].classList.add("active");
+    dots[index].classList.add("active");
+    currentSlide = index;
   }
 
-  showSlide(nextSlide);
+  setInterval(() => {
+    let nextSlide = currentSlide + 1;
+    if (nextSlide >= slides.length) nextSlide = 0;
+    showSlide(nextSlide);
+  }, 4000);
 
-}, 4000);
-
-/* click dots */
-dots.forEach((dot, index) => {
-
-  dot.addEventListener("click", () => {
-    showSlide(index);
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => showSlide(index));
   });
-
-});
 </script>
 
 </body>

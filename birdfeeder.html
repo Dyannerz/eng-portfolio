@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Badminton Shuttlecock Feeder — Automated Training System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #141417;
+      --card: #1a1a1f;
+      --border: #2a2a32;
+      --accent: #ec4899;
+      --accent2: #f472b6;
+      --text: #e8e8f0;
+      --muted: #7c7c94;
+      --radius: 12px;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(13, 13, 15, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo a {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .back-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent2); }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+
+    .page-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 2rem 0;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 2rem 0 0.75rem 0;
+      letter-spacing: -0.01em;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      border-left: 3px solid var(--accent);
+      padding-left: 1rem;
+    }
+
+    .metrics {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin: 2rem 0 1rem;
+    }
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.8rem;
+      text-align: center;
+      flex: 1;
+      min-width: 150px;
+    }
+    .metric-number {
+      font-size: 2.1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    .two-col {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin: 2rem 0;
+      align-items: center;
+    }
+    .two-col .text { flex: 1.2; }
+    .two-col .media { flex: 1; }
+
+    .img-full {
+      width: 100%;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .img-full img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      max-height: 500px;
+    }
+
+    .grid-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .grid-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .grid-card a {
+      display: block;
+      width: 100%;
+      text-decoration: none;
+      line-height: 0;
+    }
+    .grid-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+    .grid-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      background: #0a0a0c;
+    }
+    .grid-caption {
+      padding: 0.7rem 0.9rem 0.9rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .callout {
+      background: rgba(236, 72, 153, 0.08);
+      border-left: 4px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+    }
+    .callout strong { color: var(--accent2); }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      margin-top: 2rem;
+    }
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .container { padding: 5rem 1.2rem 3rem; }
+      nav { padding: 0 1.2rem; }
+      .two-col { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo"><a href="index.html">Daniel Yan</a></span>
+  <a href="index.html" class="back-link">← Back to Portfolio</a>
+</nav>
+
+<div class="container">
+  <div class="page-label">Mechatronics & embedded systems</div>
+  <h1>Badminton Shuttlecock <span>Feeder</span> — Automated Training System</h1>
+  <div class="lead">
+    A portable, wirelessly controlled badminton launcher capable of simulating realistic clears, drives, and smashes for solo training.
+  </div>
+
+  <div class="metrics">
+    <div class="metric-card"><div class="metric-number">2</div><div class="metric-label">Degrees of Freedom</div></div>
+    <div class="metric-card"><div class="metric-number">ESP32</div><div class="metric-label">Microcontroller</div></div>
+    <div class="metric-card"><div class="metric-number">Bluetooth</div><div class="metric-label">Wireless Control</div></div>
+    <div class="metric-card"><div class="metric-number">180km/h</div><div class="metric-label">Max Speed</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Hero / Idea -->
+  <h2 class="section-title">Project Objective</h2>
+  <div class="section-sub">Engineering an affordable solo training solution for badminton athletes</div>
+  
+  <div class="two-col">
+    <div class="text">
+      <p>This project focused on developing a portable automated badminton shuttlecock launcher capable of simulating realistic badminton shots for solo training. The goal was to engineer an affordable and customizable alternative to commercial badminton machines by integrating mechanical systems, embedded electronics, and wireless control into a compact training platform.</p>
+      <p>The launcher was designed to generate multiple shot types including clears, drives, and smashes while allowing wireless control through a smartphone interface. The project combined mechanical design, motor systems, embedded programming, and rapid prototyping into a complete mechatronics system.</p>
+      <div class="callout">
+        <strong>🎯 Core challenge:</strong> Deliver consistent shuttlecock launching with adjustable speed and trajectory at a fraction of commercial machine costs.
+      </div>
+    </div>
+    <div class="media">
+      <div class="img-full">
+        <a href="images/birdfeeder/main.png" data-lightbox="gallery-main" data-title="Badminton Shuttlecock Feeder prototype">
+          <img src="images/birdfeeder/main.png" alt="main.png" onerror="this.src='https://placehold.co/600x400/1a1a2e/ec4899?text=Main+Prototype'">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Engineering Design Process -->
+  <h2 class="section-title">Engineering Design Process</h2>
+  <div class="section-sub">From concept evaluation to functional prototype</div>
+
+  <p>The project began with research into commercial badminton launchers and flywheel-based ball launching systems. Multiple concepts were evaluated based on:</p>
+  <ul style="color: var(--muted); padding-left: 1.5rem; margin: 0.5rem 0;">
+    <li>Shot consistency</li>
+    <li>Launch speed</li>
+    <li>Portability</li>
+    <li>Mechanical simplicity</li>
+    <li>Cost</li>
+    <li>Wireless control capability</li>
+  </ul>
+  <p>Several launch mechanisms were explored before selecting a dual-wheel flywheel system powered by high-speed brushless motors. This design provided reliable shuttle acceleration, adjustable launch speed, and compact packaging.</p>
+  <p>The development process involved:</p>
+  <ul style="color: var(--muted); padding-left: 1.5rem; margin: 0.5rem 0;">
+    <li>CAD prototyping</li>
+    <li>Mechanical testing</li>
+    <li>ESC and motor integration</li>
+    <li>Embedded software development</li>
+    <li>Launch consistency testing</li>
+    <li>Iterative redesign and optimization</li>
+  </ul>
+  <p>&lt;add 1.png 2.png 3.png&gt;</p>
+
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card">
+      <a href="images/birdfeeder/1.png" data-lightbox="gallery-design" data-title="CAD design 1">
+        <img src="images/birdfeeder/1.png" alt="1.png" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=1.png'">
+      </a>
+      <div class="grid-caption">Initial CAD concept</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/birdfeeder/2.png" data-lightbox="gallery-design" data-title="CAD design 2">
+        <img src="images/birdfeeder/2.png" alt="2.png" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=2.png'">
+      </a>
+      <div class="grid-caption">Mechanical layout</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/birdfeeder/3.png" data-lightbox="gallery-design" data-title="CAD design 3">
+        <img src="images/birdfeeder/3.png" alt="3.png" onerror="this.src='https://placehold.co/400x300/1a1a2e/ec4899?text=3.png'">
+      </a>
+      <div class="grid-caption">Assembly view</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Mechanical System Design -->
+  <h2 class="section-title">Mechanical System Design</h2>
+  <div class="section-sub">Dual flywheel launch mechanism for shot versatility</div>
+  <div class="two-col">
+    <div class="text">
+      <p>The launcher used two counter-rotating high-speed wheels to accelerate the shuttlecock through frictional contact. Wheel spacing and alignment were iteratively refined to improve:</p>
+      <ul style="color: var(--muted); padding-left: 1.5rem;">
+        <li>Shuttle stability</li>
+        <li>Launch consistency</li>
+        <li>Shot accuracy</li>
+        <li>Feather durability</li>
+      </ul>
+      <p style="margin-top: 0.75rem;">An adjustable aiming mechanism allowed the launcher to vary shot trajectory and simulate different badminton shots such as:</p>
+      <ul style="color: var(--muted); padding-left: 1.5rem;">
+        <li>Clears</li>
+        <li>Drives</li>
+        <li>Net shots</li>
+        <li>Smash trajectories</li>
+      </ul>
+      <p>The frame structure was designed to remain lightweight while maintaining rigidity under high motor speeds and vibration loads.</p>
+    </div>
+    <div class="media">
+      <div class="img-full">
+        <a href="images/birdfeeder/launcher.jpg" data-lightbox="gallery-mech" data-title="Launcher mechanism">
+          <img src="images/birdfeeder/launcher.jpg" alt="Launcher" onerror="this.src='https://placehold.co/500x400/1a1a2e/ec4899?text=Launcher+Mechanism'">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLIDWORKS GIFs -->
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card">
+      <a href="images/birdfeeder/gif1.gif" data-lightbox="gallery-cad" data-title="SOLIDWORKS assembly">
+        <img src="images/birdfeeder/gif1.gif" alt="gif1.gif">
+      </a>
+      <div class="grid-caption">SOLIDWORKS assembly workflow</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/birdfeeder/gif2.gif" data-lightbox="gallery-cad" data-title="SOLIDWORKS interface">
+        <img src="images/birdfeeder/gif2.gif" alt="gif2.gif">
+      </a>
+      <div class="grid-caption">CAD modeling and motion study</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/birdfeeder/gif3.gif" data-lightbox="gallery-cad" data-title="SOLIDWORKS CAM">
+        <img src="images/birdfeeder/gif3.gif" alt="gif3.gif">
+      </a>
+      <div class="grid-caption">SOLIDWORKS CAM integration</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Electrical and Embedded Systems -->
+  <h2 class="section-title">Electrical & Embedded Systems</h2>
+  <div class="section-sub">ESP32-based control with Bluetooth smartphone interface</div>
+  <div class="two-col">
+    <div class="text">
+      <p>The electrical system integrated:</p>
+      <ul style="color: var(--muted); padding-left: 1.5rem;">
+        <li>Brushless DC motors</li>
+        <li>Electronic Speed Controllers (ESCs)</li>
+        <li>ESP32 microcontroller</li>
+        <li>Bluetooth wireless communication</li>
+        <li>Portable battery power</li>
+      </ul>
+      <p style="margin-top: 0.75rem;">The ESP32 acted as the central controller, handling:</p>
+      <ul style="color: var(--muted); padding-left: 1.5rem;">
+        <li>Motor speed control</li>
+        <li>Bluetooth communication</li>
+        <li>User input processing</li>
+        <li>Launch timing logic</li>
+      </ul>
+      <p>Custom embedded software was developed using the Arduino framework to provide stable motor control and wireless operation through a smartphone interface.</p>
+    </div>
+    <div class="media">
+      <div class="grid-card" style="width: 70%; margin: 0 auto;">
+        <a href="images/birdfeeder/r3.jpg" data-lightbox="gallery-electrical" data-title="ESP32 module">
+          <img src="images/birdfeeder/r3.jpg" alt="r3.jpg">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-images" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="grid-card">
+      <a href="images/birdfeeder/r2.jpg" data-lightbox="gallery-electrical" data-title="Motor assembly">
+        <img src="images/birdfeeder/r2.jpg" alt="r2.jpg">
+      </a>
+      <div class="grid-caption">Brushless motor and wheel assembly</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/birdfeeder/app1.png" data-lightbox="gallery-app" data-title="Motor speed control interface">
+        <img src="images/birdfeeder/app1.png" alt="app1.png">
+      </a>
+      <div class="grid-caption">Motor control interface — fine/fast speed adjustment</div>
+    </div>
+    <div class="grid-card">
+      <a href="images/birdfeeder/app2.png" data-lightbox="gallery-app" data-title="Servo and PWM control">
+        <img src="images/birdfeeder/app2.png" alt="app2.png">
+      </a>
+      <div class="grid-caption">Servo angle and PWM control panel</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>📱 Wireless control:</strong> The smartphone app connects via Bluetooth to the ESP32, allowing users to adjust motor speeds, control servo angles for aiming, and trigger launches remotely — enabling solo training without a partner.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Testing and Iteration -->
+  <h2 class="section-title">Testing & Iteration</h2>
+  <div class="section-sub">Refining shot consistency and system reliability</div>
+  <div class="text">
+    <p>Extensive testing was conducted to improve:</p>
+    <ul style="color: var(--muted); padding-left: 1.5rem;">
+      <li>Shot repeatability</li>
+      <li>Motor synchronization</li>
+      <li>Shuttle stability</li>
+      <li>Structural vibration</li>
+      <li>Launch angle consistency</li>
+    </ul>
+    <p>Several engineering challenges were encountered including shuttle wobble, uneven wheel traction, and high-speed vibration. These were solved through iterative redesigns, ESC tuning, and structural improvements.</p>
+
+  <div class="grid-images" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="grid-card">
+      <video style="width: 100%;" controls>
+        <source src="images/birdfeeder/vid1.mov" type="video/mp4">
+      </video>
+      <div class="grid-caption">ESC and motor calibration</div>
+    </div>
+    <div class="grid-card">
+      <video style="width: 100%;" controls>
+        <source src="images/birdfeeder/vid2.mov" type="video/mp4">
+      </video>
+      <div class="grid-caption">Wheel speed and distance testing</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Results -->
+  <h2 class="section-title">Results</h2>
+  <div class="section-sub">A fully functional mechatronics training system</div>
+
+  <div class="grid-images" style="grid-template-columns: repeat(1, 1fr);">
+    <div class="grid-card">
+      <a href="images/birdfeeder/r1.jpg" data-lightbox="gallery-results" data-title="Final prototype">
+        <img src="images/birdfeeder/r1.jpg" alt="r1.jpg">
+      </a>
+      <div class="grid-caption">Final assembled prototype</div>
+    </div>
+  </div>
+
+  <p>The final prototype successfully demonstrated:</p>
+  <ul style="color: var(--muted); padding-left: 1.5rem; margin: 0.5rem 0 1rem;">
+    <li>Consistent shuttlecock launching</li>
+    <li>Adjustable shot trajectories</li>
+    <li>Wireless Bluetooth control</li>
+    <li>Portable battery-powered operation</li>
+    <li>Full integration of mechanical, electrical, and embedded systems</li>
+  </ul>
+
+  <div class="callout">
+    <strong>🏸 Project impact:</strong> This project combined mechanical engineering, embedded systems programming, motor control systems, wireless communication, mechatronics integration, and rapid prototyping into a fully functional badminton training system designed for solo practice and future expandability.
+  </div>
+
+  <a href="index.html" class="btn-back">← Back to main portfolio</a>
+</div>
+
+<footer>
+  <p>© 2026 Daniel Yan · Badminton Shuttlecock Feeder — Mechatronics & Embedded Systems</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<script>
+  lightbox.option({
+    'resizeDuration': 200,
+    'wrapAround': true,
+    'albumLabel': "Image %1 of %2"
+  });
+</script>
+</body>
+</html>
