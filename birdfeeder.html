@@ -151,6 +151,24 @@
       color: var(--muted);
       margin-top: 0.25rem;
     }
+    @media (max-width: 480px) {
+      .metric-card {
+        padding: 0.8rem 0.5rem;
+        min-width: 80px;
+      }
+      
+      .metric-number {
+        font-size: 1rem;
+      }
+      
+      .metric-label {
+        font-size: 0.55rem;
+      }
+      
+      .metrics {
+        gap: 0.8rem;
+      }
+    }
 
     .two-col {
       display: flex;
@@ -487,15 +505,15 @@
   <div class="grid-images" style="grid-template-columns: repeat(2, 1fr);">
     <div class="grid-card">
       <video style="width: 100%;" controls>
-        <source src="images/birdfeeder/vid1.mov" type="video/mp4">
+        <source src="images/birdfeeder/vid1.mp4" type="video/mp4">
       </video>
       <div class="grid-caption">ESC and motor calibration</div>
     </div>
     <div class="grid-card">
       <video style="width: 100%;" controls>
-        <source src="images/birdfeeder/vid2.mov" type="video/mp4">
+        <source src="images/birdfeeder/vid2.mp4" type="video/mp4">
       </video>
-      <div class="grid-caption">Wheel speed and distance testing</div>
+      <div class="grid-caption">Wheel speed and clearance testing</div>
     </div>
   </div>
 
