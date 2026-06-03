@@ -310,7 +310,48 @@
       nav { padding: 0 1.2rem; }
       .two-col { flex-direction: column; }
     }
-  </style>
+    
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      margin-top: 2rem;
+    }
+
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      margin-top: 2rem;
+    }
+
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+    }
+      </style>
 </head>
 <body>
 
@@ -339,7 +380,7 @@
   <!-- Project Idea -->
   <h2 class="section-title">Project Objective</h2>
   <div class="section-sub">Core material reduction without compromising structural soundness</div>
-  <p style="margin-bottom: 1rem;">The goal was to remove core material and the subsequent two ply layers to achieve substantial weight savings. Since the entire car is manufactured from composites, experimenting with core placement and behaviour was a high-value initiative. No race regulations apply to the aerobody's structural integrity, and there are no direct forces acting on the surface — providing complete design freedom. The only constraints were to prevent excessive deformation under acceleration and dynamic loads, and to avoid introducing additional stiffeners.</p>
+  <p style="margin-bottom: 1rem;">The goal was to remove core material and the subsequent two ply layers to achieve substantial weight savings. Since the entire car is manufactured from composites, experimenting with core placement and behaviour was a high-value initiative. No race regulations apply to the aerobody's structural integrity, and there are no direct forces acting on the surface, allowing complete design freedom. The only constraints were to prevent excessive deformation under acceleration and dynamic loads, avoid introducing additional stiffeners and the use of unidirectional fabric.</p>
   <div class="callout">
     <strong>🎯 Design freedom:</strong> No structural regulations + no direct surface forces → full flexibility to optimize core layout for minimum weight while ensuring adequate stiffness under 1g acceleration, gravity, and dynamic cornering loads.
   </div>
@@ -350,9 +391,9 @@
   <h2 class="section-title">Design Process & Baseline Analysis</h2>
   <div class="two-col">
     <div class="text">
-      <p><strong>Baseline assessment:</strong> The original BAB showed up to 9 mm deformation near the rear (butt) section, but was significantly over-engineered in other regions. Core material could therefore be removed from low-stress areas without affecting performance.</p>
-      <p><strong>Core material selection:</strong> Thick <strong>Rohacell 200</strong> was used for high-load areas (chassis bottom), while <strong>¼ or ⅛ Divinycell</strong> was applied to the remaining body. The choice of core type and thickness was determined by local stress distribution from FEA.</p>
-      <p><strong>Manufacturability check:</strong> Each ply region was validated using CATIA Composites Design producibility tools (see <em>3.png</em>).</p>
+      <p><strong>Baseline assessment:</strong> The original BAB showed up to 9 mm deformation near the rear section, but was significantly over-engineered in other regions. Core material could therefore be removed from low stress areas without affecting performance.</p>
+      <p><strong>Core material selection:</strong> Thick <strong>Rohacell 200</strong> was used for high load areas (chassis bottom), while <strong>¼ or ⅛ Divinycell</strong> was applied to the remaining body. The choice of core type and thickness was determined by local stress distribution from FEA.</p>
+      <p><strong>Manufacturability check:</strong> Each ply region was validated using CATIA Composites Design producibility tools.</p>
     </div>
     <div class="media">
       <div class="img-full">
@@ -489,31 +530,10 @@
     </div>
   </div>
   <div class="callout">
-    <strong>📚 Legacy & sustainability:</strong> Documented workflow and guided hands-on training so that future teams can continue refining composite structures without losing institutional knowledge. Both Anna and Randi now independently run CATIA Composites Design analyses.
+    <strong>Legacy & sustainability:</strong> Documented workflow and guided hands on training so that future teams can continue refining composite structures without losing institutional knowledge. Both Anna and Randi now independently run CATIA Composites Design analyses.
   </div>
 
   <div class="divider"></div>
 
-  <!-- Related project link -->
-  <div class="callout" style="text-align: center;">
-    <strong>🔗 Related work:</strong> Explore the full <a href="composites-workflow.html" style="color: var(--accent2);">Composites Design Workflow project →</a> (detailed ply book, producibility validation, and manufacturing guidelines)
-  </div>
 
-  <a href="index.html" class="btn-back">← Back to main portfolio</a>
-</div>
-
-<footer>
-  <p>© 2026 Daniel Yan · Bottom Aerobody Core Optimization — CATIA Composites, ANSYS, Lightweight Composites</p>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
-<script>
-  lightbox.option({
-    'resizeDuration': 200,
-    'wrapAround': true,
-    'albumLabel': "Image %1 of %2"
-  });
-</script>
-</body>
-</html>
+<a href="index.html" class="btn-back">← Back to main portfolio</a>

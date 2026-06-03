@@ -327,11 +327,11 @@
       <ul class="feature-list">
         <li>Stable projection alignment</li>
         <li>Must be easily storable, or dissassembleable into a 2D plane</li>
-        <li>Calibration accuracy within sub‑millimeter tolerance</li>
-        <li>Large-area coverage (up to 5m × 2.5m)</li>
+        <li>Calibration accuracy for tilt and pan</li>
+        <li>Large area coverage (at least bigger than width of roll)</li>
         <li>Manufacturability within workshop constraints</li>
       </ul>
-      <p>The system enables flattened ply geometries to be projected directly from CAD-generated outputs onto fiberglass and carbon fiber fabrics at full scale. This significantly improves cutting precision, repeatability between parts, manufacturing speed, material utilization, and consistency between CAD design and final manufactured components.</p>
+      <p>The system enables flattened ply geometries to be projected directly from CAD generated outputs onto fiberglass and carbon fiber fabrics at full scale. This significantly improves cutting precision, repeatability between parts, manufacturing speed, material utilization, and consistency between CAD design and final manufactured components.</p>
     </div>
   </div>
 
@@ -354,7 +354,7 @@
   <div class="divider"></div>
 
   <!-- ========== SECTION 2: NESTING OPTIMIZATION ========== -->
-  <h2 class="section-title">📐 Nesting Optimization</h2>
+  <h2 class="section-title">Nesting Optimization</h2>
   <div class="section-sub">Python-based automated ply arrangement · fiber‑aware rotation</div>
 
   <div class="two-col" style="flex-direction: row-reverse;">
@@ -369,7 +369,7 @@
       <p>To further improve manufacturing efficiency, a custom nesting workflow was developed to automatically arrange flattened ply geometries. The nesting software is developed in Python, using heuristic packing algorithms while considering:</p>
       <ul class="feature-list">
         <li><strong>Fiber rosette direction</strong> (rotate only 0° or 180° to respect strength requirements)</li>
-        <li><strong>Material boundaries</strong> – staying within prepreg roll width (914.4 mm)</li>
+        <li><strong>Material boundaries</strong> – staying within roll width (914.4 mm)</li>
         <li><strong>Ply spacing requirements</strong> – adjustable separation for cutting tolerance</li>
         <li><strong>Manufacturability constraints</strong> – avoiding crowding and maintaining handleable sections</li>
       </ul>
@@ -379,22 +379,18 @@
 
   <!-- Side‑by‑side images for nesting software: n1.png and n2.png (n2.png assumed) -->
   <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin: 2rem 0;">
-    <div class="grid-card" style="flex: 0 1 auto; width: 45%; max-width: 400px;">
+    <div class="grid-card" style="flex: 0 1 auto; width: 20%; max-width: 400px;">
       <a href="images/projector/n1.png" data-lightbox="nest-gallery" data-title="Full nesting output: 32 ply parts on 5465mm roll">
         <img src="images/projector/n1.png" alt="Nesting map 1" onerror="this.src='https://placehold.co/600x400/141417/ec4899?text=N1+Layout'" style="width: 100%; height: auto; display: block;">
       </a>
       <div class="grid-caption">PDF nest map · 32 individual plies</div>
     </div>
-    <div class="grid-card" style="flex: 0 1 auto; width: 45%; max-width: 400px;">
+    <div class="grid-card" style="flex: 0 1 auto; width: 20%; max-width: 400px;">
       <a href="images/projector/n2.png" data-lightbox="nest-gallery" data-title="Nesting software UI — Python backend with visual packing preview">
         <img src="images/projector/n2.png" alt="Nesting software interface" onerror="this.src='https://placehold.co/600x400/141417/ec4899?text=Python+Nesting+UI'" style="width: 100%; height: auto; display: block;">
       </a>
       <div class="grid-caption">Corresponding numbers to ply names</div>
     </div>
-  </div>
-
-  <div class="callout">
-    📈 <strong>Results:</strong> The nesting optimization reduced prepreg material consumption by 18.5 kg (22%) for the GEN12 aerobody, directly lowering project costs by over $2,400. Combined with the laser projection system, the end-to-end digital workflow improved ply placement accuracy by 73% compared to traditional manual templates.
   </div>
 
   <a href="index.html" class="btn-back">← Back to main portfolio</a>

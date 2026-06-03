@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Daniel Yan — Engineering Portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -30,12 +31,10 @@
       overflow-x: hidden;
     }
 
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-    /* ===== MOBILE-FIRST NAVIGATION ===== */
     nav {
       position: fixed;
       top: 0;
@@ -55,7 +54,6 @@
       padding: 0 2rem;
     }
 
-
     .nav-logo {
       font-weight: 700;
       font-size: 1.1rem;
@@ -67,7 +65,6 @@
       white-space: nowrap;
     }
 
-    /* Mobile menu button */
     .menu-btn {
       display: none;
       background: none;
@@ -105,7 +102,6 @@
 
     .nav-links a:hover { color: var(--text); }
 
-    /* Mobile styles */
     @media (max-width: 768px) {
       .menu-btn {
         display: block;
@@ -148,7 +144,6 @@
         background: rgba(236, 72, 153, 0.1);
       }
 
-      /* Hamburger animation */
       .menu-btn.active span:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
       }
@@ -160,7 +155,6 @@
       }
     }
 
-    /* Hero Slideshow */
     .hero {
       min-height: 100vh;
       position: relative;
@@ -304,7 +298,6 @@
       transform: translateY(-2px);
     }
 
-    /* Sections */
     section {
       padding: 4rem 1.5rem;
       max-width: 1000px;
@@ -334,7 +327,6 @@
       margin-bottom: 2rem;
     }
 
-    /* About - vertical on mobile */
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -344,42 +336,50 @@
 
     .about-text p { color: var(--muted); margin-bottom: 1rem; line-height: 1.8; }
 
-    .about-stats {
+    .about-photos {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      gap: 0.6rem;
     }
 
-    .stat-card {
-      background: var(--card);
-      border: 1px solid var(--border);
+    .about-photo {
+      aspect-ratio: 1 / 1;
       border-radius: var(--radius);
-      padding: 1.25rem;
-      text-align: center;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
     }
 
-    .stat-card .num {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .about-photo a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      line-height: 0;
     }
 
-    .stat-card .label { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+    .about-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .about-photo:hover img {
+      transform: scale(1.05);
+    }
 
     @media (max-width: 700px) {
       .about-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
       }
-      .about-stats {
+      .about-photos {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    /* Experience - mobile optimized */
     .exp-grid {
       display: flex;
       flex-direction: column;
@@ -409,7 +409,6 @@
       object-fit: contain;
       display: block;
       background: transparent;
-      /* Add these for iOS Safari */
       -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
     }
@@ -428,7 +427,6 @@
     .company { color: var(--accent2); font-size: 0.85rem; margin: 0.15rem 0 0.5rem; }
     .exp-text p { color: var(--muted); font-size: 0.85rem; line-height: 1.7; }
 
-    /* Mobile: stack experience items vertically with smaller logo */
     @media (max-width: 600px) {
       .exp-item {
         flex-direction: column;
@@ -445,7 +443,6 @@
       }
     }
 
-    /* Projects Grid */
     .projects-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -557,7 +554,6 @@
       }
     }
 
-    /* Resume Card */
     .resume-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -583,7 +579,6 @@
       font-size: 1.5rem;
     }
 
-    /* Contact */
     .contact-grid {
       display: flex;
       gap: 1.25rem;
@@ -649,7 +644,6 @@
       margin: 0 auto;
     }
 
-    /* Fade-in */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
       to { opacity: 1; transform: translateY(0); }
@@ -680,19 +674,36 @@
   </div>
 </nav>
 
-<!-- Hero -->
 <div class="hero">
   <div class="slide active">
-    <img src="images/slides/1.png" alt="">
+    <img src="images/slides/1.jpg" alt="">
   </div>
   <div class="slide">
-    <img src="images/slides/2.png" alt="">
+    <img src="images/slides/2.jpg" alt="">
+  </div>
+  <div class="slide active">
+    <img src="images/slides/3.jpg" alt="">
+  </div>
+  <div class="slide">
+    <img src="images/slides/4.jpg" alt="">
+  </div>
+  <div class="slide active">
+    <img src="images/slides/5.jpg" alt="">
+  </div>
+  <div class="slide">
+    <img src="images/slides/6.jpg" alt="">
+  </div>
+  <div class="slide active">
+    <img src="images/slides/7.jpg" alt="">
+  </div>
+  <div class="slide">
+    <img src="images/slides/8.jpg" alt="">
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-tag">Engineering Portfolio</div>
     <h1 class="fade-up delay-1">Hi, I'm <span>Daniel</span></h1>
-    <p class="fade-up delay-2">Mechanical / Software / Electrical Engineer building things that matter.</p>
+    <p class="fade-up delay-2">Mechanical Engineer - It’s not about whether I can or not. I’m gonna do it because I want to.</p>
     <div class="hero-cta fade-up delay-3">
       <a href="#projects" class="btn btn-primary">View Projects</a>
       <a href="#contact" class="btn btn-ghost">Get in Touch</a>
@@ -701,33 +712,53 @@
   <div class="slider-dots">
     <span class="dot active"></span>
     <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
   </div>
 </div>
 
 <div class="divider"></div>
 
-<!-- About -->
 <section id="about">
   <p class="section-label">About</p>
   <h2 class="section-title">Who I am</h2>
   <div class="about-grid">
     <div class="about-text">
-      <p>I'm an engineering student passionate about solving complex problems through design, analysis, and prototyping. I thrive at the intersection of theory and hands-on building.</p>
-      <p>When I'm not in the lab, I'm exploring new frameworks, contributing to open-source hardware projects, or hiking somewhere with no cell service.</p>
+      <p>I am a Mechanical Engineering student specializing in structural design, simulation-driven optimization, and advanced fabrication. I thrive at the intersection of complex CAD architecture and hands-on building—whether that means running finite element analysis to shave mass off a structural component or getting my hands dirty working with composite materials in the lab. I build things that are fast, efficient, and thoroughly validated.</p>
+      <p>When I'm out of the machine shop, I keep just as active and hands-on. I stay active on the ice, playing for UofT's Tri-Campus Blue hockey team, or on the courts playing badminton and volleyball, as sports keep my competitive drive sharp and remind me what true teamwork looks like. For creative outlets, I trade my CAD software for a camera lens, pick up an instrument to play some jazz, or experiment with precision in the kitchen through cooking to open up my restaurant one day with Michelin-level dishes.</p>
       <a href="#contact" class="btn btn-ghost" style="margin-top:0.5rem; display:inline-flex;">Say hello →</a>
     </div>
-    <div class="about-stats">
-      <div class="stat-card"><div class="num">12+</div><div class="label">Projects Completed</div></div>
-      <div class="stat-card"><div class="num">3</div><div class="label">Years Experience</div></div>
-      <div class="stat-card"><div class="num">5</div><div class="label">Internships</div></div>
-      <div class="stat-card"><div class="num">2</div><div class="label">Publications</div></div>
+    <div class="about-photos">
+      <div class="about-photo">
+        <a href="images/about/1.jpg" data-lightbox="about-gallery" data-title="Scoring all the goals">
+          <img src="images/about/1.jpg" alt="Hockey">
+        </a>
+      </div>
+      <div class="about-photo">
+        <a href="images/about/2.jpg" data-lightbox="about-gallery" data-title="Louis Armstrong on the trombonne">
+          <img src="images/about/2.jpg" alt="Jazz">
+        </a>
+      </div>
+      <div class="about-photo">
+        <a href="images/about/3.jpg" data-lightbox="about-gallery" data-title="Cook portfolio">
+          <img src="images/about/3.jpg" alt="Cooking">
+        </a>
+      </div>
+      <div class="about-photo">
+        <a href="images/about/4.jpg" data-lightbox="about-gallery" data-title="Driving the car">
+          <img src="images/about/4.jpg" alt="Car">
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- Experience -->
 <section id="experience">
   <p class="section-label">Career</p>
   <h2 class="section-title">Experience</h2>
@@ -777,7 +808,6 @@
 
 <div class="divider"></div>
 
-<!-- Projects -->
 <section id="projects">
   <p class="section-label">Work</p>
   <h2 class="section-title">Projects</h2>
@@ -798,7 +828,6 @@
         </div>
       </div>
     </a>
-
     <a href="rollcage.html" class="project-card">
       <div class="project-thumb">
         <img src="images/rollcage/main.png" alt="GEN12 Roll Cage Design">
@@ -814,7 +843,6 @@
         </div>
       </div>
     </a>
-
     <a href="composites.html" class="project-card">
       <div class="project-thumb">
         <img src="images/composites/main.png" alt="Composites Design (Canopy)">
@@ -830,39 +858,6 @@
         </div>
       </div>
     </a>
-
-    <a href="projector.html" class="project-card">
-      <div class="project-thumb">
-        <img src="images/projector/main.png" alt="Laser Composite Projection System">
-        <div class="project-overlay"><span>Blue Sky Solar Racing</span></div>
-      </div>
-      <div class="project-info">
-        <h3>Laser Composite Projection System</h3>
-        <p>Developed a projection-based composite manufacturing workflow that converts CAD-generated ply geometries into full-scale cutting guides for accurate composite fabrication and improved material efficiency.</p>
-        <div class="project-tags">
-          <span class="tag">Solidworks</span>
-          <span class="tag">Python</span>
-          <span class="tag">CATIA</span>
-          <span class="tag">Manufacturing</span>
-        </div>
-      </div>
-    </a>
-
-    <a href="camera.html" class="project-card">
-      <div class="project-thumb">
-        <img src="images/camera/main.png" alt="Robotic Camera Arm">
-        <div class="project-overlay"><span>UofT Course Project</span></div>
-      </div>
-      <div class="project-info">
-        <h3>Robotic Camera Arm</h3>
-        <p>Designed and engineered a low-cost semi-autonomous robotic camera arm for MMA cage-side filming, integrating custom drivetrain, telescopic arm, gearbox, and motion systems to achieve smooth multi-axis cinematic camera movement in constrained live-event environments.</p>
-        <div class="project-tags">
-          <span class="tag">Solidworks</span>
-          <span class="tag">Kinematics</span>
-        </div>
-      </div>
-    </a>
-
     <a href="birdfeeder.html" class="project-card">
       <div class="project-thumb">
         <img src="images/birdfeeder/main.png" alt="Shuttlecock Feeder">
@@ -880,12 +875,41 @@
         </div>
       </div>
     </a>
+    <a href="camera.html" class="project-card">
+      <div class="project-thumb">
+        <img src="images/camera/main.png" alt="Robotic Camera Arm">
+        <div class="project-overlay"><span>UofT Course Project</span></div>
+      </div>
+      <div class="project-info">
+        <h3>Robotic Camera Arm</h3>
+        <p>Designed and engineered a low-cost semi-autonomous robotic camera arm for MMA cage-side filming, integrating custom drivetrain, telescopic arm, gearbox, and motion systems to achieve smooth multi-axis cinematic camera movement in constrained live-event environments.</p>
+        <div class="project-tags">
+          <span class="tag">Solidworks</span>
+          <span class="tag">Kinematics</span>
+        </div>
+      </div>
+    </a>
+    <a href="projector.html" class="project-card">
+      <div class="project-thumb">
+        <img src="images/projector/main.png" alt="Laser Composite Projection System">
+        <div class="project-overlay"><span>Blue Sky Solar Racing</span></div>
+      </div>
+      <div class="project-info">
+        <h3>Laser Composite Projection System</h3>
+        <p>Developed a projection-based composite manufacturing workflow that converts CAD-generated ply geometries into full-scale cutting guides for accurate composite fabrication and improved material efficiency.</p>
+        <div class="project-tags">
+          <span class="tag">Solidworks</span>
+          <span class="tag">Python</span>
+          <span class="tag">CATIA</span>
+          <span class="tag">Manufacturing</span>
+        </div>
+      </div>
+    </a>
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- Resume -->
 <section id="resume" style="text-align:center;">
   <p class="section-label">Resume</p>
   <h2 class="section-title">View My CV!</h2>
@@ -899,7 +923,6 @@
 
 <div class="divider"></div>
 
-<!-- Contact -->
 <section id="contact">
   <p class="section-label">Contact</p>
   <h2 class="section-title">Let's connect</h2>
@@ -924,8 +947,15 @@
   <p>© 2026 Daniel Yan · My Engineering Portfolio</p>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 <script>
-  // Mobile menu toggle
+  lightbox.option({
+    'resizeDuration': 200,
+    'wrapAround': true,
+    'albumLabel': "Image %1 of %2"
+  });
+
   const menuBtn = document.getElementById('menuBtn');
   const navLinks = document.getElementById('navLinks');
 
@@ -934,7 +964,6 @@
     menuBtn.classList.toggle('active');
   });
 
-  // Close menu when clicking a link
   document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', () => {
       navLinks.classList.remove('active');
@@ -942,7 +971,6 @@
     });
   });
 
-  // Hero slideshow
   const slides = document.querySelectorAll(".slide");
   const dots = document.querySelectorAll(".dot");
   let currentSlide = 0;
